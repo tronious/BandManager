@@ -6,6 +6,10 @@ import SetlistPage from '../views/SetlistPage.vue'
 const routes = [
   {
     path: '/',
+    redirect: '/events'
+  },
+  {
+    path: '/events',
     name: 'Events',
     component: EventsPage
   },

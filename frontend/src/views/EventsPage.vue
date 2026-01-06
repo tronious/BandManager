@@ -3,8 +3,10 @@
     <h2>Events</h2>
     <p>Upcoming gigs and setlists live here.</p>
 
-    <ul>
-      <li v-for="e in demoEvents" :key="e.id">
+    <p v-if="loading">Loading events...</p>
+    <p v-else-if="error" class="error">{{ error }}</p>
+    <ul v-else>
+      <li v-for="e in events" :key="e.id">
         <strong>{{ e.name }}</strong> — {{ e.date }}
         · <RouterLink :to="`/events/${e.id}/setlist`">Open setlist</RouterLink>
       </li>
@@ -17,11 +19,21 @@ export default {
   name: 'EventsPage',
   data() {
     return {
-      demoEvents: [
-        { id: '1', name: 'King Seat Tavern', date: '2026-01-10' },
-        { id: '2', name: 'Winery Night', date: '2026-01-17' },
-      ],
+      events: [],
+      loading: true,
+      error: null
     }
   },
+  async mounted() {
+    try {
+      const response = await fetch('http://localhost:3001/api/events')
+      if (!response.ok) throw new Error('Failed to fetch events')
+      this.events = await response.json()
+    } catch (err) {
+      this.error = err.message
+    } finally {
+      this.loading = false
+    }
+  }
 }
 </script>
