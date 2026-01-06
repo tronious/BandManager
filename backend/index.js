@@ -15,6 +15,7 @@ app.get('/health', (req, res) => {
     status: 'ok',
     service: 'bandmanager-backend'
   });
+  console.log('Health check OK');
 });
 
 app.get('/api/events', (req, res) => {
@@ -22,6 +23,7 @@ app.get('/api/events', (req, res) => {
     { id: '1', name: 'King Seat Tavern', date: '2026-01-10' },
     { id: '2', name: 'Winery Night', date: '2026-01-17' }
   ]);
+  console.log('GET /api/events called');
 });
 
 
