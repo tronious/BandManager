@@ -1,21 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Color palette - Modern dark theme with vibrant accents */
-  --bg-primary: #0f0f13;
-  --bg-secondary: #1a1a23;
-  --bg-card: #22222d;
-  --bg-card-hover: #2a2a38;
+  /* Color palette - Clean modern dark theme */
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #141417;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-card-hover: rgba(255, 255, 255, 0.06);
   --text-primary: #ffffff;
-  --text-secondary: #a0a0b0;
-  --text-muted: #6b6b7b;
-  --accent-primary: #8b5cf6;
-  --accent-secondary: #a78bfa;
-  --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  --text-secondary: #888890;
+  --text-muted: #555560;
+  --accent-primary: #ffffff;
+  --accent-secondary: #cccccc;
   --border-color: rgba(255, 255, 255, 0.08);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.15);
+  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.05);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -40,10 +39,22 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--bg-primary);
-  background-image: 
-    radial-gradient(ellipse at top, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+  background: transparent;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(to bottom, rgba(15, 15, 19, 0.85) 0%, rgba(15, 15, 19, 0.92) 100%),
+    url('./assets/tronious.jpg') center/contain no-repeat;
+  background-color: var(--bg-primary);
+  z-index: -1;
 }
 
 #app {
@@ -71,10 +82,7 @@ h1, h2, h3, h4 {
 
 h1 {
   font-size: 2rem;
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
 }
 
 h2 {
@@ -107,14 +115,14 @@ button:hover {
 }
 
 button.primary {
-  background: var(--accent-gradient);
+  background: var(--text-primary);
   border: none;
-  color: white;
+  color: var(--bg-primary);
 }
 
 button.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
 }
 
 /* Card styles */
@@ -128,7 +136,7 @@ button.primary:hover {
 
 .card:hover {
   background: var(--bg-card-hover);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
   box-shadow: var(--shadow-glow);
 }
 

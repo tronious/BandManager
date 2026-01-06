@@ -2,16 +2,13 @@
   <div class="app">
     <header class="topbar">
       <div class="logo">
-        <span class="logo-icon">🎸</span>
         <h1>BandManager</h1>
       </div>
       <nav class="nav">
         <RouterLink to="/events" class="nav-link">
-          <span class="nav-icon">📅</span>
           Events
         </RouterLink>
         <RouterLink to="/library" class="nav-link">
-          <span class="nav-icon">📚</span>
           Library
         </RouterLink>
       </nav>
@@ -20,10 +17,6 @@
     <main class="content">
       <RouterView />
     </main>
-
-    <footer class="footer">
-      <p>© 2026 BandManager — Rock on! 🤘</p>
-    </footer>
   </div>
 </template>
 
@@ -42,23 +35,21 @@ export default { name: 'App' }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
+  padding: 1.25rem 2rem;
+  background: linear-gradient(to bottom, #1a1a1f 0%, #121215 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-}
-
-.logo-icon {
-  font-size: 1.5rem;
 }
 
 .logo h1 {
@@ -87,8 +78,8 @@ export default { name: 'App' }
 }
 
 .nav-link.router-link-active {
-  background: var(--accent-gradient);
-  color: white;
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .nav-icon {
@@ -97,18 +88,6 @@ export default { name: 'App' }
 
 .content {
   flex: 1;
-}
-
-.footer {
-  padding: 1.5rem 2rem;
-  text-align: center;
-  border-top: 1px solid var(--border-color);
-  background: var(--bg-secondary);
-}
-
-.footer p {
-  font-size: 0.875rem;
-  color: var(--text-muted);
 }
 
 @media (max-width: 640px) {

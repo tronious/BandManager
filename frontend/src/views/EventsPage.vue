@@ -106,7 +106,7 @@ export default {
 
 .event-card:hover {
   background: var(--bg-card-hover);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
   transform: translateX(4px);
   box-shadow: var(--shadow-glow);
 }
@@ -118,7 +118,7 @@ export default {
   justify-content: center;
   min-width: 60px;
   height: 60px;
-  background: var(--accent-gradient);
+  background: var(--text-primary);
   border-radius: var(--radius-md);
   padding: 0.5rem;
 }
@@ -127,14 +127,14 @@ export default {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
-  color: white;
+  color: var(--bg-primary);
 }
 
 .date-month {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--bg-secondary);
 }
 
 .event-details {
@@ -170,9 +170,9 @@ export default {
 }
 
 .event-action:hover {
-  background: var(--accent-primary);
-  border-color: var(--accent-primary);
-  color: white;
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .event-action .arrow {
