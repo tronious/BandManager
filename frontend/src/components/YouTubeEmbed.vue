@@ -1,3 +1,6 @@
+<!-- YouTubeEmbed.vue -
+This component embeds a YouTube video given its URL.  In the future make this  more robust to not have to hardcode
+video ID's and instead use an admin page to manage videos.  -->
 <template>
   <div class="video-embed">
     <iframe
@@ -11,10 +14,11 @@
 </template>
 
 <script>
+// Extract the video ID from a YouTube URL
 export default {
   name: 'YouTubeEmbed',
   props: {
-    url: {
+    videoId: {
       type: String,
       required: true
     },
@@ -24,13 +28,9 @@ export default {
     }
   },
   computed: {
-    videoId() {
-      // Extract video ID from various YouTube URL formats
-      const match = this.url.match(/[?&]v=([\w-]{11})/) || this.url.match(/youtu\.be\/([\w-]{11})/);
-      return match ? match[1] : '';
-    },
+    // Construct the embed URL
     embedUrl() {
-      return this.videoId ? `https://www.youtube.com/embed/${this.videoId}` : '';
+      return `https://www.youtube.com/embed/${this.videoId}`;
     }
   }
 }

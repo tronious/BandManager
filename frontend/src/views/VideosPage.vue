@@ -1,3 +1,6 @@
+<!-- VideosPage.vue -- 
+This view displays a list of video thumbnails on the left sidebar. When a thumbnail is clicked, the corresponding YouTube video is embedded and played on the right side.
+-->
 <template>
   <div class="videos-page-flex-outer">
     <div class="videos-page-header">
@@ -12,10 +15,7 @@
           @click="selectVideo(video)"
           :title="video.title"
         >
-          <img
-            :src="getThumbnailUrl(video.url)"
-            :alt="video.title"
-          />
+          <img :src="getThumbnailUrl(video.url)" :alt="video.title" />
           <div class="thumb-title">{{ video.title }}</div>
         </div>
       </div>
@@ -27,22 +27,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useVideosStore } from '@/stores/videos.js';
-import PageHeader from '@/components/PageHeader.vue';
-import YouTubeEmbed from '@/components/YouTubeEmbed.vue';
+import { ref } from "vue";
+import { useVideosStore } from "@/stores/videos.js";
+import PageHeader from "@/components/PageHeader.vue";
+import YouTubeEmbed from "@/components/YouTubeEmbed.vue";
 
+// Access the videos store - Blockbuster where have you been all my life
 const videosStore = useVideosStore();
+// For now we use hardcoded videos in the store
 const videos = videosStore.videos;
+
+// needs to be a ref because we will change it on click
 const selectedVideo = ref(null);
 
+// Select a video to play
 function selectVideo(video) {
   selectedVideo.value = video;
 }
+
+/* Extracts the YouTube video ID from a URL and constructs the thumbnail URL */
 function getThumbnailUrl(url) {
-  const match = url.match(/[?&]v=([\w-]{11})/) || url.match(/youtu\.be\/([\w-]{11})/);
-  const id = match ? match[1] : '';
-  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+  // thank you chatgpt for this regex and this function LOL...regex's are not my forte
+  const match =
+    url.match(/[?&]v=([\w-]{11})/) || url.match(/youtu\.be\/([\w-]{11})/);
+  const id = match ? match[1] : "";
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 }
 </script>
 
@@ -92,7 +101,7 @@ function getThumbnailUrl(url) {
   align-items: center;
   background: #18181b;
   border-radius: 1rem;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
   padding: 0.5rem 0.5rem 1rem 0.5rem;
   width: 100%;
   flex: 1 1 0;
@@ -105,7 +114,7 @@ function getThumbnailUrl(url) {
   object-fit: cover;
   border-radius: 0.75rem;
   margin-bottom: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
   flex: 1 1 0;
   min-height: 0;
 }
@@ -129,7 +138,7 @@ function getThumbnailUrl(url) {
   min-height: 0;
   height: 100%;
   overflow: hidden;
-  padding:50px;
+  padding: 50px;
 }
 .selected-video-player .video-embed {
   aspect-ratio: 16/9;

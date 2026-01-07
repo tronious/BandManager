@@ -2,6 +2,8 @@
   <div>
     <div class="app">
       <!-- Floating music notes background -->
+      <!-- Each note is absolutely positioned and animated
+        hacky?  Maybe...cool?  Absolutely  -->
       <div class="notes-bg" aria-hidden="true">
         <span class="note note-1">♪</span>
         <span class="note note-2">♫</span>
@@ -40,6 +42,7 @@
         <RouterView />
       </main>
     </div>
+    <!-- Global loading spinner overlay -->
     <LoadingSpinner v-if="ui.loading" class="global-spinner" :message="''" />
   </div>
 </template>
@@ -49,9 +52,15 @@ import { useUiStore } from '@/stores/ui.js';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+
+// UI store for global loading state
 const ui = useUiStore();
+
+// Router hooks to show/hide loading spinner on route changes
 const router = useRouter();
 let loadingTimeout = null;
+
+// Show loading spinner with minimum display time..just gives a nice effect
 function startLoading() {
   ui.showLoading();
   if (loadingTimeout) clearTimeout(loadingTimeout);
@@ -66,6 +75,8 @@ function stopLoading() {
     // ui.hideLoading();
   }
 }
+
+// Setup the router hooks on mount
 onMounted(() => {
   router.beforeEach((to, from, next) => {
     // Only show spinner for EventsView

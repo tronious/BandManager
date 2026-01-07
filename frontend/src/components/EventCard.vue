@@ -1,3 +1,7 @@
+<!-- EventCard.vue -
+this component displays an individual event card with date, name, and a link to the setlist
+
+todo: hook this into live data  -->
 <template>
   <article class="event-card" :style="{ animationDelay: `${animationDelay}s` }">
     <div class="event-date">
