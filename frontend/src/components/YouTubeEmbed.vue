@@ -6,7 +6,8 @@ video ID's and instead use an admin page to manage videos.  -->
     <iframe
       :src="embedUrl"
       frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen
       :title="title"
     ></iframe>
@@ -28,15 +29,21 @@ export default {
     }
   },
   computed: {
+    // Check if URL is already an embed URL
+    isEmbedUrl() {
+      return this.url.includes('/embed/');
+    },
     // Extract video ID from full YouTube URL
     videoId() {
       const match = this.url.match(/[?&]v=([\w-]{11})/) || this.url.match(/youtu\.be\/([\w-]{11})/);
       return match ? match[1] : '';
     },
-    // Construct the embed URL with origin parameter for cross-origin compatibility
+    // Use embed URL directly if provided, otherwise construct from video ID
     embedUrl() {
-      const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      return `https://www.youtube.com/embed/${this.videoId}?origin=${encodeURIComponent(origin)}&rel=0`;
+      if (this.isEmbedUrl) {
+        return this.url;
+      }
+      return `https://www.youtube.com/embed/${this.videoId}?rel=0&modestbranding=1`;
     }
   }
 }
