@@ -14,6 +14,10 @@ export const useVideosStore = defineStore('videos', {
             {
                 url: 'https://www.youtube.com/embed/gMI9BVHXYy8?si=bcMA1fPrb_P9sgL_',
                 title: 'Promo'
+            },
+            {
+                url: 'https://www.youtube.com/embed/y09rlOT7EVo?si=CZJnXaC3coF1TjBL',
+                title: 'Point and Wine'
             }
         ]
     })
