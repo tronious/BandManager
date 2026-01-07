@@ -85,4 +85,47 @@ export default {
 .feature span:first-child {
   font-size: 1rem;
 }
+
+@media (max-width: 768px) {
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .back-link {
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .features-preview {
+    gap: 0.75rem;
+  }
+
+  .feature {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .feature span:first-child {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .back-link {
+    font-size: 0.75rem;
+  }
+
+  .features-preview {
+    gap: 0.5rem;
+  }
+
+  .feature {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+  }
+
+  .feature span:first-child {
+    font-size: 0.8rem;
+  }
+}
 </style>

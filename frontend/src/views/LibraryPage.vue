@@ -63,4 +63,19 @@ export default {
 .feature span:first-child {
   font-size: 1rem;
 }
+
+@media (max-width: 640px) {
+  .features-preview {
+    gap: 0.75rem;
+  }
+
+  .feature {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .feature span:first-child {
+    font-size: 0.85rem;
+  }
+}
 </style>

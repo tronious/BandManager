@@ -3,10 +3,10 @@ This view displays a list of video thumbnails on the left sidebar. When a thumbn
 -->
 <template>
   <div class="videos-page-flex-outer">
-    <div class="videos-page-header">
-      <PageHeader title="Videos" subtitle="Band performances and highlights" />
-    </div>
-    <div class="videos-flex-layout">
+    <div class="videos-header-row" ref="headerRef">
+      <div class="videos-page-header">
+        <PageHeader title="Videos" subtitle="Band performances and highlights" />
+      </div>
       <div class="videos-sidebar">
         <div
           v-for="video in videos"
@@ -19,6 +19,8 @@ This view displays a list of video thumbnails on the left sidebar. When a thumbn
           <div class="thumb-title">{{ video.title }}</div>
         </div>
       </div>
+    </div>
+    <div class="videos-container">
       <div v-if="selectedVideo" class="selected-video-player">
         <YouTubeEmbed :url="selectedVideo.url" :title="selectedVideo.title" />
       </div>
@@ -28,6 +30,7 @@ This view displays a list of video thumbnails on the left sidebar. When a thumbn
 
 <script setup>
 import { ref } from "vue";
+import { onMounted, onUnmounted } from 'vue';
 import { useVideosStore } from "@/stores/videos.js";
 import PageHeader from "@/components/PageHeader.vue";
 import YouTubeEmbed from "@/components/YouTubeEmbed.vue";
@@ -39,6 +42,26 @@ const videos = videosStore.videos;
 
 // needs to be a ref because we will change it on click
 const selectedVideo = ref(null);
+
+// refs for measuring header height so we can size thumbnails to avoid scrollbars
+const outer = ref(null);
+const headerRef = ref(null);
+
+function setHeaderHeightVar() {
+  if (outer.value && headerRef.value) {
+    const h = headerRef.value.offsetHeight || 120;
+    outer.value.style.setProperty('--header-height', `${h}px`);
+  }
+}
+
+onMounted(() => {
+  setHeaderHeightVar();
+  window.addEventListener('resize', setHeaderHeightVar);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', setHeaderHeightVar);
+});
 
 // Select a video to play
 function selectVideo(video) {
@@ -56,42 +79,50 @@ function getThumbnailUrl(url) {
 </script>
 
 <style scoped>
-/* Layout: sidebar (thumbnails) left, large player right */
+/* Layout: header + thumbnails in a row, large player below */
 .videos-page-flex-outer {
-  flex: 1 1 0;
-  min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   height: 100%;
+  overflow: hidden;
 }
+
+.videos-header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  flex: 0 0 auto;
+  padding-right: 2rem;
+  overflow: hidden;
+}
+
 .videos-page-header {
   flex: 0 0 auto;
 }
-.videos-flex-layout {
-  display: flex;
-  flex-direction: row;
-  flex: 1 1 0;
-  min-height: 0;
-  max-width: 100vw;
-  overflow: hidden;
-  gap: 2.5rem;
-}
+
 .videos-sidebar {
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
+
+.videos-container {
+  display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 1.5rem;
-  width: 340px;
-  min-width: 220px;
-  max-width: 340px;
-  padding: 1rem 0;
-  height: 100%;
-  flex: 0 0 340px;
+  flex: 1 1 0;
   min-height: 0;
   overflow: hidden;
+  padding: 1rem 2rem;
+  gap: 2rem;
 }
-/* Make video thumbnails clickable and style selected player */
+
 .video-thumb {
   cursor: pointer;
   opacity: 0.85;
@@ -102,58 +133,115 @@ function getThumbnailUrl(url) {
   background: #18181b;
   border-radius: 1rem;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
-  padding: 0.5rem 0.5rem 1rem 0.5rem;
-  width: 100%;
-  flex: 1 1 0;
-  min-height: 0;
-  max-width: 320px;
+  padding: 0.5rem;
+  flex: 0 0 180px;
+  min-width: 180px;
 }
+
 .video-thumb img {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 0.75rem;
   margin-bottom: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
-  flex: 1 1 0;
-  min-height: 0;
 }
+
 .video-thumb:hover {
   opacity: 1;
   transform: scale(1.04);
 }
+
 .thumb-title {
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   text-align: center;
   margin-top: 0.25rem;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
+
 .selected-video-player {
   flex: 1 1 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
   min-height: 0;
-  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  padding: 50px;
+  background: #0a0a0a;
+  border-radius: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
 }
+
 .selected-video-player .video-embed {
-  aspect-ratio: 16/9;
   width: 100%;
-  max-width: 100%;
-  max-height: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .selected-video-player iframe {
   width: 100%;
   height: 100%;
-  max-height: 100%;
   border-radius: 1rem;
+}
+
+@media (max-width: 768px) {
+  .videos-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-right: 1rem;
+  }
+
+  .videos-sidebar {
+    width: 100%;
+  }
+
+  .videos-container {
+    padding: 0.75rem 1rem;
+    gap: 1rem;
+  }
+
+  .video-thumb {
+    flex: 0 0 140px;
+    min-width: 140px;
+  }
+
+  .thumb-title {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .videos-header-row {
+    padding-right: 0.75rem;
+  }
+
+  .videos-container {
+    padding: 0.5rem 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .videos-sidebar {
+    gap: 0.75rem;
+  }
+
+  .video-thumb {
+    flex: 0 0 120px;
+    min-width: 120px;
+  }
+
+  .thumb-title {
+    font-size: 0.7rem;
+  }
 }
 </style>

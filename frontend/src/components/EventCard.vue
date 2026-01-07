@@ -154,16 +154,52 @@ export default {
   }
 }
 
+@media (max-width: 768px) {
+  .event-card {
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .event-date {
+    min-width: 50px;
+    height: 50px;
+  }
+
+  .date-day {
+    font-size: 1.25rem;
+  }
+
+  .event-name {
+    font-size: 1rem;
+  }
+
+  .event-info {
+    font-size: 0.8rem;
+  }
+
+  .event-action {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
 @media (max-width: 640px) {
   .event-card {
     flex-direction: column;
     text-align: center;
-    padding: 1.5rem;
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .event-date {
+    min-width: 50px;
+    height: 50px;
   }
 
   .event-action {
     width: 100%;
     justify-content: center;
+    padding: 0.5rem 0.8rem;
   }
 }
 </style>

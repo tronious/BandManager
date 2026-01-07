@@ -3,6 +3,7 @@
     <div class="record-spinner">
       <div class="record-grooves"></div>
       <img src="@/assets/tronious.jpg" alt="Tronious Label" class="record-label" />
+      <div class="spindle-hole"></div>
     </div>
     <p v-if="message">{{ message }}</p>
   </div>
@@ -60,6 +61,19 @@ export default {
   transform: translate(-50%, -50%);
   border: 3px solid #fff2;
   box-shadow: 0 0 8px #000a;
+}
+.spindle-hole {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #0a0a0b;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 10;
 }
 @keyframes spin {
   to {

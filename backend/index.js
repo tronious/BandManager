@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 8080;
 
 // middleware
 
-// enable CORS for all routes for now
+// enable CORS for all routes
 app.use(cors());
 
 // parse JSON bodies

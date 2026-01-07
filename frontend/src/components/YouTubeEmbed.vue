@@ -18,7 +18,7 @@ video ID's and instead use an admin page to manage videos.  -->
 export default {
   name: 'YouTubeEmbed',
   props: {
-    videoId: {
+    url: {
       type: String,
       required: true
     },
@@ -28,6 +28,11 @@ export default {
     }
   },
   computed: {
+    // Extract video ID from full YouTube URL
+    videoId() {
+      const match = this.url.match(/[?&]v=([\w-]{11})/) || this.url.match(/youtu\.be\/([\w-]{11})/);
+      return match ? match[1] : '';
+    },
     // Construct the embed URL
     embedUrl() {
       return `https://www.youtube.com/embed/${this.videoId}`;

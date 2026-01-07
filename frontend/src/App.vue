@@ -42,19 +42,34 @@
         <RouterView />
       </main>
     </div>
+    <!-- Welcome splash screen on initial load -->
+    <Transition name="fade">
+      <div v-if="showWelcome" class="welcome-splash">
+        <div class="welcome-spinner">
+          <div class="record-grooves"></div>
+          <img src="@/assets/tronious.jpg" alt="Tronious Label" class="record-label" />
+          <div class="spindle-hole"></div>
+        </div>
+        <p class="welcome-text">Welcome to <span class="accent">Tronious Music</span></p>
+        <p class="welcome-subtext">Let the music move you...</p>
+      </div>
+    </Transition>
     <!-- Global loading spinner overlay -->
-    <LoadingSpinner v-if="ui.loading" class="global-spinner" :message="''" />
+    <LoadingSpinner v-if="ui.loading && !showWelcome" class="global-spinner" message="Getting the latest events..." />
   </div>
 </template>
 
 <script setup>
 import { useUiStore } from '@/stores/ui.js';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 // UI store for global loading state
 const ui = useUiStore();
+
+// Welcome splash screen state
+const showWelcome = ref(true);
 
 // Router hooks to show/hide loading spinner on route changes
 const router = useRouter();
@@ -78,6 +93,11 @@ function stopLoading() {
 
 // Setup the router hooks on mount
 onMounted(() => {
+  // Hide welcome splash after 5 seconds
+  setTimeout(() => {
+    showWelcome.value = false;
+  }, 5000);
+
   router.beforeEach((to, from, next) => {
     // Only show spinner for EventsView
     if (to.name === 'Events' || to.path === '/events') {
@@ -93,23 +113,153 @@ onMounted(() => {
 });
 </script>
 <style scoped>
+/* Welcome splash screen */
+.welcome-splash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #1a1a1f 0%, #0a0a0b 100%);
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.welcome-spinner {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 60% 40%, #222 60%, #111 100%);
+  position: relative;
+  animation: spin 2s linear infinite;
+  box-shadow: 
+    0 0 60px rgba(248, 113, 113, 0.3),
+    0 0 120px rgba(248, 113, 113, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-spinner .record-grooves {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    repeating-radial-gradient(circle, transparent 0 12px, rgba(255,255,255,0.04) 13px 14px),
+    repeating-radial-gradient(circle, transparent 0 28px, rgba(255,255,255,0.03) 29px 30px);
+}
+
+.welcome-spinner .record-label {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-spinner .spindle-hole {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #0a0a0b;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+.welcome-text {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.welcome-text .accent {
+  color: #f87171;
+  font-style: italic;
+}
+
+.welcome-subtext {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.8s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 /* Overlay spinner styles */
 .global-spinner {
   position: fixed;
   inset: 0;
   margin: 0;
-  background: rgba(10,10,11,0.85);
+  background: radial-gradient(ellipse at center, #1a1a1f 0%, #0a0a0b 100%);
   z-index: 99999;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
   pointer-events: all;
 }
+
+.global-spinner :deep(.record-spinner) {
+  width: 300px;
+  height: 300px;
+  box-shadow: 
+    0 0 60px rgba(248, 113, 113, 0.3),
+    0 0 120px rgba(248, 113, 113, 0.1);
+}
+
+.global-spinner :deep(.record-label) {
+  width: 120px;
+  height: 120px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.global-spinner :deep(.record-grooves) {
+  background:
+    repeating-radial-gradient(circle, transparent 0 12px, rgba(255,255,255,0.04) 13px 14px),
+    repeating-radial-gradient(circle, transparent 0 28px, rgba(255,255,255,0.03) 29px 30px);
+}
+
+.global-spinner :deep(.loading-state p) {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
 .app {
-  min-height: 100vh;
   height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .topbar {
@@ -190,7 +340,7 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* Floating music notes */
+/* Floating music notes - hide on mobile to reduce clutter */
 .notes-bg {
   position: fixed;
   top: 0;
@@ -200,6 +350,12 @@ onMounted(() => {
   pointer-events: none;
   overflow: hidden;
   z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .notes-bg {
+    display: none;
+  }
 }
 
 .note {
