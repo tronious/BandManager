@@ -1,0 +1,9 @@
+{
+  "globalHeaders": {
+    "Content-Security-Policy": "frame-src 'self' https://www.youtube.com https://youtube.com; frame-ancestors 'self';"
+  },
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/*.{css,js,json,ico,png,jpg,jpeg,svg,gif,webp,woff,woff2}"]
+  }
+}

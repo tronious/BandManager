@@ -33,9 +33,10 @@ export default {
       const match = this.url.match(/[?&]v=([\w-]{11})/) || this.url.match(/youtu\.be\/([\w-]{11})/);
       return match ? match[1] : '';
     },
-    // Construct the embed URL
+    // Construct the embed URL with origin parameter for cross-origin compatibility
     embedUrl() {
-      return `https://www.youtube.com/embed/${this.videoId}`;
+      const origin = typeof window !== 'undefined' ? window.location.origin : '';
+      return `https://www.youtube.com/embed/${this.videoId}?origin=${encodeURIComponent(origin)}&rel=0`;
     }
   }
 }
