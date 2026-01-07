@@ -25,7 +25,7 @@
         </div>
         <nav class="nav">
           <RouterLink to="/events" class="nav-link">
-            Events
+            Upcoming Shows
           </RouterLink>
           <RouterLink to="/library" class="nav-link">
             Library
@@ -57,18 +57,23 @@ function startLoading() {
   if (loadingTimeout) clearTimeout(loadingTimeout);
   loadingTimeout = setTimeout(() => {
     ui.hideLoading();
-  }, 3000);
+  }, 2000);
 }
 function stopLoading() {
   if (loadingTimeout) {
-    setTimeout(() => ui.hideLoading(), 3000);
+    // setTimeout(() => ui.hideLoading(), 2000);
   } else {
-    ui.hideLoading();
+    // ui.hideLoading();
   }
 }
 onMounted(() => {
   router.beforeEach((to, from, next) => {
-    startLoading();
+    // Only show spinner for EventsView
+    if (to.name === 'Events' || to.path === '/events') {
+      startLoading();
+    } else {
+      ui.hideLoading();
+    }
     next();
   });
   router.afterEach(() => {
@@ -189,24 +194,24 @@ onMounted(() => {
 .note {
   position: absolute;
   font-size: 2.2rem;
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.9);
   animation: float 20s ease-in-out infinite;
 }
 
-.note-1 { left: 5%; top: 20%; animation-delay: 0s; animation-duration: 25s; }
-.note-2 { left: 15%; top: 60%; animation-delay: -5s; animation-duration: 22s; font-size: 3rem; color: rgba(248, 113, 113, 0.3); }
-.note-3 { left: 30%; top: 40%; animation-delay: -10s; animation-duration: 28s; }
-.note-4 { left: 50%; top: 80%; animation-delay: -3s; animation-duration: 24s; font-size: 2.7rem; color: rgba(248, 113, 113, 0.3); }
-.note-5 { left: 65%; top: 25%; animation-delay: -8s; animation-duration: 26s; }
-.note-6 { left: 80%; top: 55%; animation-delay: -12s; animation-duration: 23s; font-size: 3.5rem; color: rgba(248, 113, 113, 0.3); }
-.note-7 { left: 90%; top: 35%; animation-delay: -15s; animation-duration: 27s; }
-.note-8 { left: 40%; top: 15%; animation-delay: -7s; animation-duration: 21s; font-size: 2.6rem; }
-.note-9 { left: 10%; top: 85%; animation-delay: -2s; animation-duration: 29s; font-size: 2.8rem; color: rgba(248, 113, 113, 0.3); }
-.note-10 { left: 75%; top: 70%; animation-delay: -18s; animation-duration: 24s; }
-.note-11 { left: 55%; top: 45%; animation-delay: -11s; animation-duration: 26s; font-size: 3rem; color: rgba(248, 113, 113, 0.3); }
-.note-12 { left: 25%; top: 75%; animation-delay: -6s; animation-duration: 23s; }
-.note-13 { left: 85%; top: 15%; animation-delay: -14s; animation-duration: 27s; font-size: 3rem; }
-.note-14 { left: 45%; top: 55%; animation-delay: -9s; animation-duration: 25s; font-size: 2.3rem; color: rgba(248, 113, 113, 0.3); }
+.note-1 { left: 5%; top: 20%; animation-delay: 0s; animation-duration: 13s; }
+.note-2 { left: 15%; top: 60%; animation-delay: -2.5s; animation-duration: 11s; font-size: 3rem; color: rgba(248, 113, 113, 0.8); }
+.note-3 { left: 30%; top: 40%; animation-delay: -5s; animation-duration: 14s; }
+.note-4 { left: 50%; top: 80%; animation-delay: -1.5s; animation-duration: 12s; font-size: 2.7rem; color: rgba(248, 113, 113, 0.8); }
+.note-5 { left: 65%; top: 25%; animation-delay: -4s; animation-duration: 13s; }
+.note-6 { left: 80%; top: 55%; animation-delay: -6s; animation-duration: 11.5s; font-size: 3.5rem; color: rgba(248, 113, 113, 0.8); }
+.note-7 { left: 90%; top: 35%; animation-delay: -7.5s; animation-duration: 13.5s; }
+.note-8 { left: 40%; top: 15%; animation-delay: -3.5s; animation-duration: 10.5s; font-size: 2.6rem; }
+.note-9 { left: 10%; top: 85%; animation-delay: -1s; animation-duration: 15s; font-size: 2.8rem; color: rgba(248, 113, 113, 0.8); }
+.note-10 { left: 75%; top: 70%; animation-delay: -9s; animation-duration: 12s; }
+.note-11 { left: 55%; top: 45%; animation-delay: -5.5s; animation-duration: 13s; font-size: 3rem; color: rgba(248, 113, 113, 0.8); }
+.note-12 { left: 25%; top: 75%; animation-delay: -3s; animation-duration: 11.5s; }
+.note-13 { left: 85%; top: 15%; animation-delay: -7s; animation-duration: 13.5s; font-size: 3rem; }
+.note-14 { left: 45%; top: 55%; animation-delay: -4.5s; animation-duration: 12.5s; font-size: 2.3rem; color: rgba(248, 113, 113, 0.8); }
 
 @keyframes float {
   0%, 100% {

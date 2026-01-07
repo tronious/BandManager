@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
   if (loadingTimeout) clearTimeout(loadingTimeout);
   loadingTimeout = setTimeout(() => {
     ui.hideLoading();
-  }, 3000);
+  }, 2000);
   next();
 });
 
@@ -53,7 +53,7 @@ router.afterEach(() => {
   // Ensure spinner stays at least 3s, but hides after if route is ready
   const ui = useUiStore();
   if (loadingTimeout) {
-    setTimeout(() => ui.hideLoading(), 3000);
+    // setTimeout(() => ui.hideLoading(), 2000);
   } else {
     ui.hideLoading();
   }

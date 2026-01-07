@@ -129,6 +129,7 @@ function getThumbnailUrl(url) {
   min-height: 0;
   height: 100%;
   overflow: hidden;
+  padding:50px;
 }
 .selected-video-player .video-embed {
   aspect-ratio: 16/9;
