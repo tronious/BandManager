@@ -70,9 +70,11 @@ function selectVideo(video) {
 
 /* Extracts the YouTube video ID from a URL and constructs the thumbnail URL */
 function getThumbnailUrl(url) {
-  // thank you chatgpt for this regex and this function LOL...regex's are not my forte
+  // Handle watch URLs, short URLs, and embed URLs
   const match =
-    url.match(/[?&]v=([\w-]{11})/) || url.match(/youtu\.be\/([\w-]{11})/);
+    url.match(/[?&]v=([\w-]{11})/) || 
+    url.match(/youtu\.be\/([\w-]{11})/) ||
+    url.match(/\/embed\/([\w-]{11})/);
   const id = match ? match[1] : "";
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 }
