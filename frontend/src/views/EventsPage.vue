@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       events: [],
-      loading: true,
+      loading: false,
       error: null
     }
   },
@@ -59,10 +59,14 @@ export default {
   },
   methods: {
     async fetchEvents() {
-      this.loading = true
+      this.loading = false
       this.error = null
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events`)
+        // Run API call and minimum delay in parallel
+        const [response] = await Promise.all([
+          fetch(`${import.meta.env.VITE_API_URL}/api/events`),
+          new Promise(resolve => setTimeout(resolve, 3000))
+        ])
         if (!response.ok) throw new Error('Failed to fetch events')
         this.events = await response.json()
       } catch (err) {

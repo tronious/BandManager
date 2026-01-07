@@ -1,20 +1,20 @@
 <template>
   <div class="loading-state">
-    <div class="spinner"></div>
+    <div class="record-spinner">
+      <div class="record-grooves"></div>
+      <img src="@/assets/tronious.jpg" alt="Tronious Label" class="record-label" />
+    </div>
     <p v-if="message">{{ message }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'LoadingSpinner',
+  name: "LoadingSpinner",
   props: {
-    message: {
-      type: String,
-      default: 'Loading...'
-    }
+    message: String
   }
-}
+};
 </script>
 
 <style scoped>
@@ -23,25 +23,49 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
-  gap: 1rem;
+  min-height: 100vh;
+  position: relative;
 }
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--border-color);
-  border-top-color: var(--accent-primary);
+.record-spinner {
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  background: radial-gradient(circle at 60% 40%, #222 60%, #111 100%);
+  position: relative;
+  animation: spin 1.5s linear infinite;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
 }
-
+.record-grooves {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    repeating-radial-gradient(circle, transparent 0 8px, rgba(255,255,255,0.04) 9px 10px),
+    repeating-radial-gradient(circle, transparent 0 18px, rgba(255,255,255,0.03) 19px 20px);
+}
+.record-label {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid #fff2;
+  box-shadow: 0 0 8px #000a;
+}
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
-
 .loading-state p {
   color: var(--text-secondary);
   font-size: 0.95rem;

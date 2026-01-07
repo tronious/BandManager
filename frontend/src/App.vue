@@ -1,32 +1,97 @@
 <template>
-  <div class="app">
-    <header class="topbar">
-      <div class="logo">
-        <h1>BandManager</h1>
+  <div>
+    <div class="app">
+      <!-- Floating music notes background -->
+      <div class="notes-bg" aria-hidden="true">
+        <span class="note note-1">♪</span>
+        <span class="note note-2">♫</span>
+        <span class="note note-3">♪</span>
+        <span class="note note-4">♫</span>
+        <span class="note note-5">♪</span>
+        <span class="note note-6">♫</span>
+        <span class="note note-7">♪</span>
+        <span class="note note-8">♫</span>
+        <span class="note note-9">♪</span>
+        <span class="note note-10">♫</span>
+        <span class="note note-11">♪</span>
+        <span class="note note-12">♫</span>
+        <span class="note note-13">♪</span>
+        <span class="note note-14">♫</span>
       </div>
-      <nav class="nav">
-        <RouterLink to="/events" class="nav-link">
-          Events
-        </RouterLink>
-        <RouterLink to="/library" class="nav-link">
-          Library
-        </RouterLink>
-      </nav>
-    </header>
 
-    <main class="content">
-      <RouterView />
-    </main>
+      <header class="topbar">
+        <div class="logo">
+          <h1><span class="logo-text">Tronious</span> <span class="logo-accent">Music</span></h1>
+        </div>
+        <nav class="nav">
+          <RouterLink to="/events" class="nav-link">
+            Events
+          </RouterLink>
+          <RouterLink to="/library" class="nav-link">
+            Library
+          </RouterLink>
+          <RouterLink to="/videos" class="nav-link">
+            Videos
+          </RouterLink>
+        </nav>
+      </header>
+
+      <main class="content">
+        <RouterView />
+      </main>
+    </div>
+    <LoadingSpinner v-if="ui.loading" class="global-spinner" :message="''" />
   </div>
 </template>
 
-<script>
-export default { name: 'App' }
+<script setup>
+import { useUiStore } from '@/stores/ui.js';
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import { onMounted, onUnmounted } from 'vue';
+import { useRouter } from 'vue-router';
+const ui = useUiStore();
+const router = useRouter();
+let loadingTimeout = null;
+function startLoading() {
+  ui.showLoading();
+  if (loadingTimeout) clearTimeout(loadingTimeout);
+  loadingTimeout = setTimeout(() => {
+    ui.hideLoading();
+  }, 3000);
+}
+function stopLoading() {
+  if (loadingTimeout) {
+    setTimeout(() => ui.hideLoading(), 3000);
+  } else {
+    ui.hideLoading();
+  }
+}
+onMounted(() => {
+  router.beforeEach((to, from, next) => {
+    startLoading();
+    next();
+  });
+  router.afterEach(() => {
+    stopLoading();
+  });
+});
 </script>
-
-<style>
+<style scoped>
+/* Overlay spinner styles */
+.global-spinner {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  background: rgba(10,10,11,0.85);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+}
 .app {
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -36,15 +101,15 @@ export default { name: 'App' }
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 2rem;
-  background: linear-gradient(to bottom, #1a1a1f 0%, #121215 100%);
+  /* background: linear-gradient(to bottom, #1a1a1f 0%, #121215 100%); */
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 
-    0 1px 0 rgba(255, 255, 255, 0.05) inset,
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 2px 8px rgba(0, 0, 0, 0.4);
+    0 1px 0 rgba(228, 42, 42, 0.75) inset,
+    0 8px 32px rgba(0, 0, 0, 0.9),
+    0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 .logo {
@@ -53,7 +118,22 @@ export default { name: 'App' }
 }
 
 .logo h1 {
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.logo-text {
+  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-accent {
+  color: #f87171;
+  font-weight: 400;
+  font-style: italic;
 }
 
 .nav {
@@ -87,7 +167,64 @@ export default { name: 'App' }
 }
 
 .content {
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Floating music notes */
+.notes-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.note {
+  position: absolute;
+  font-size: 2.2rem;
+  color: rgba(255, 255, 255, 0.25);
+  animation: float 20s ease-in-out infinite;
+}
+
+.note-1 { left: 5%; top: 20%; animation-delay: 0s; animation-duration: 25s; }
+.note-2 { left: 15%; top: 60%; animation-delay: -5s; animation-duration: 22s; font-size: 3rem; color: rgba(248, 113, 113, 0.3); }
+.note-3 { left: 30%; top: 40%; animation-delay: -10s; animation-duration: 28s; }
+.note-4 { left: 50%; top: 80%; animation-delay: -3s; animation-duration: 24s; font-size: 2.7rem; color: rgba(248, 113, 113, 0.3); }
+.note-5 { left: 65%; top: 25%; animation-delay: -8s; animation-duration: 26s; }
+.note-6 { left: 80%; top: 55%; animation-delay: -12s; animation-duration: 23s; font-size: 3.5rem; color: rgba(248, 113, 113, 0.3); }
+.note-7 { left: 90%; top: 35%; animation-delay: -15s; animation-duration: 27s; }
+.note-8 { left: 40%; top: 15%; animation-delay: -7s; animation-duration: 21s; font-size: 2.6rem; }
+.note-9 { left: 10%; top: 85%; animation-delay: -2s; animation-duration: 29s; font-size: 2.8rem; color: rgba(248, 113, 113, 0.3); }
+.note-10 { left: 75%; top: 70%; animation-delay: -18s; animation-duration: 24s; }
+.note-11 { left: 55%; top: 45%; animation-delay: -11s; animation-duration: 26s; font-size: 3rem; color: rgba(248, 113, 113, 0.3); }
+.note-12 { left: 25%; top: 75%; animation-delay: -6s; animation-duration: 23s; }
+.note-13 { left: 85%; top: 15%; animation-delay: -14s; animation-duration: 27s; font-size: 3rem; }
+.note-14 { left: 45%; top: 55%; animation-delay: -9s; animation-duration: 25s; font-size: 2.3rem; color: rgba(248, 113, 113, 0.3); }
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.25;
+  }
+  25% {
+    transform: translate(30px, -40px) rotate(15deg);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(-20px, -80px) rotate(-10deg);
+    opacity: 0.15;
+  }
+  75% {
+    transform: translate(40px, -40px) rotate(20deg);
+    opacity: 0.3;
+  }
 }
 
 @media (max-width: 640px) {
