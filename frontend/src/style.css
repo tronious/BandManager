@@ -27,7 +27,7 @@ body {
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
   --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.05);
   --radius-sm: 8px;
-  --radius-md: 12px;
+  --radius-md: 30px;
   --radius-lg: 16px;
   --transition: all 0.2s ease;
 

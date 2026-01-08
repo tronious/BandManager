@@ -370,6 +370,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size:1.3rem;
   padding: 0.6rem 1.2rem;
   border-radius: var(--radius-md);
   color: var(--text-secondary);

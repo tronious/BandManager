@@ -2,7 +2,6 @@
   <div class="page">
     <PageHeader
       title="Come see us play live!"
-      subtitle="Upcoming gigs and shows where you can see us live!"
     />
 
     <LoadingSpinner v-if="loading" message="Loading events..." />

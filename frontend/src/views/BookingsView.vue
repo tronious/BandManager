@@ -4,7 +4,6 @@
   <div class="page">
     <PageHeader
       title="Book Us!"
-      subtitle="Bring Tronious to your next event"
     />
 
     <div class="booking-content">
