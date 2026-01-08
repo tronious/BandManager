@@ -323,7 +323,9 @@ function getThumbnailUrl(url) {
 
   .video-thumb img {
     width: 100%;
+    aspect-ratio: 16 / 9;
     height: auto;
+    object-fit: cover;
   }
 
   .thumb-title {
