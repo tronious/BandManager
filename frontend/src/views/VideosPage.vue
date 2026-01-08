@@ -7,7 +7,7 @@ This view displays a list of video thumbnails on the left sidebar. When a thumbn
       <div class="videos-page-header">
         <PageHeader title="Videos" subtitle="Band performances and highlights" />
       </div>
-      <div class="videos-sidebar">
+      <div class="videos-sidebar" ref="sidebarRef">
         <div
           v-for="video in videos"
           :key="video.url"
@@ -18,6 +18,9 @@ This view displays a list of video thumbnails on the left sidebar. When a thumbn
           <img :src="getThumbnailUrl(video.url)" :alt="video.title" />
           <div class="thumb-title">{{ video.title }}</div>
         </div>
+      </div>
+      <div class="scroll-hint" v-show="showScrollHint">
+        <span>→</span>
       </div>
     </div>
     <div class="videos-container">
@@ -46,6 +49,8 @@ const selectedVideo = ref(null);
 // refs for measuring header height so we can size thumbnails to avoid scrollbars
 const outer = ref(null);
 const headerRef = ref(null);
+const sidebarRef = ref(null);
+const showScrollHint = ref(true);
 
 function setHeaderHeightVar() {
   if (outer.value && headerRef.value) {
@@ -54,13 +59,32 @@ function setHeaderHeightVar() {
   }
 }
 
+function checkScrollPosition() {
+  if (!sidebarRef.value) return;
+  const { scrollLeft, scrollWidth, clientWidth } = sidebarRef.value;
+  // Hide hint if no overflow or scrolled to the end (with a small tolerance)
+  const hasOverflow = scrollWidth > clientWidth;
+  const isAtEnd = scrollLeft >= scrollWidth - clientWidth - 5;
+  showScrollHint.value = hasOverflow && !isAtEnd;
+}
+
 onMounted(() => {
   setHeaderHeightVar();
   window.addEventListener('resize', setHeaderHeightVar);
+  if (sidebarRef.value) {
+    sidebarRef.value.addEventListener('scroll', checkScrollPosition);
+    // Check initial state and recheck on resize
+    checkScrollPosition();
+    window.addEventListener('resize', checkScrollPosition);
+  }
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', setHeaderHeightVar);
+  window.removeEventListener('resize', checkScrollPosition);
+  if (sidebarRef.value) {
+    sidebarRef.value.removeEventListener('scroll', checkScrollPosition);
+  }
 });
 
 // Select a video to play
@@ -97,6 +121,7 @@ function getThumbnailUrl(url) {
   flex: 0 0 auto;
   padding-right: 2rem;
   overflow: hidden;
+  position: relative;
 }
 
 .videos-page-header {
@@ -113,6 +138,38 @@ function getThumbnailUrl(url) {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.5rem 0;
+  position: relative;
+}
+
+.scroll-hint {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  /* transform: translateY(-50%); */
+  /* background: linear-gradient(to right, transparent, rgba(10, 10, 11, 0.95) 30%); */
+  padding: 1rem 1.5rem 1rem 3rem;
+  pointer-events: none;
+  z-index: 10;
+  display: none;
+  opacity: 0.85;
+}
+
+.scroll-hint span {
+  font-size: 3rem;
+  color: #f87171;
+  animation: slideRight 1.5s ease-in-out infinite;
+  display: block;
+}
+
+@keyframes slideRight {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(8px);
+    opacity: 1;
+  }
 }
 
 .videos-container {
@@ -206,6 +263,12 @@ function getThumbnailUrl(url) {
 
   .videos-sidebar {
     width: 100%;
+    min-height: fit-content;
+    height: auto;
+  }
+
+  .scroll-hint {
+    display: block;
   }
 
   .videos-container {
@@ -214,36 +277,69 @@ function getThumbnailUrl(url) {
   }
 
   .video-thumb {
-    flex: 0 0 140px;
+    flex: 0 0 auto;
     min-width: 140px;
+    max-width: 160px;
   }
 
   .thumb-title {
     font-size: 0.8rem;
   }
+
+  .selected-video-player {
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+  }
 }
 
 @media (max-width: 640px) {
   .videos-header-row {
-    padding-right: 0.75rem;
+    padding-right: 0.5rem;
+    gap: 0.75rem;
+  }
+
+  .videos-page-header {
+    padding: 0 0.5rem;
   }
 
   .videos-container {
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 0.5rem;
     gap: 0.75rem;
   }
 
   .videos-sidebar {
     gap: 0.75rem;
+    padding: 0.5rem;
+    min-height: fit-content;
+    height: auto;
   }
 
   .video-thumb {
-    flex: 0 0 120px;
-    min-width: 120px;
+    flex: 0 0 auto;
+    min-width: 130px;
+    max-width: 150px;
+  }
+
+  .video-thumb img {
+    width: 100%;
+    height: auto;
   }
 
   .thumb-title {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .selected-video-player {
+    max-width: 100%;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 0.5rem;
+  }
+
+  .selected-video-player iframe {
+    border-radius: 0.5rem;
   }
 }
 </style>
