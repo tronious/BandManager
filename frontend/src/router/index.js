@@ -4,6 +4,7 @@ import EventsPage from '../views/EventsPage.vue'
 import BookingsView from '../views/BookingsView.vue'
 import SetlistPage from '../views/SetlistPage.vue'
 import VideosPage from '../views/VideosPage.vue'
+import AdminPage from '../views/AdminPage.vue'
 import { useUiStore } from '@/stores/ui.js';
 
 const routes = [
@@ -30,6 +31,14 @@ const routes = [
     path: '/videos',
     name: 'Videos',
     component: VideosPage
+  },
+  // Don't underestimate the sneaki'ness Deeds...
+  // Sneaky admin route - not linked anywhere in the UI
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminPage,
+    meta: { hidden: true }
   }
 ]
 

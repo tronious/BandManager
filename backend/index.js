@@ -18,6 +18,7 @@ require('dotenv').config();
 // Import routes
 const commentsRouter = require('./routes/comments');
 const bookingsRouter = require('./routes/bookings');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -84,13 +85,24 @@ app.get('/health', (req, res) => {
   console.log('Health check OK');
 });
 
-// hard code these for now...no auth or db yet
-app.get('/api/events', (req, res) => {
-  res.json([
-    { id: '1', name: 'King Seat Tavern', date: '2026-01-10' },
-    { id: '2', name: 'Winery Night', date: '2026-01-17' }
-  ]);
-  console.log('GET /api/events called');
+// Get all events from database (public endpoint)
+const { supabase } = require('./lib/supabase');
+app.get('/api/events', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('events')
+      .select('*')
+      .gte('date', new Date().toISOString().split('T')[0]) // Only future events
+      .order('date', { ascending: true });
+
+    if (error) throw error;
+    
+    res.json(data || []);
+    console.log('GET /api/events called');
+  } catch (err) {
+    console.error('Error fetching events:', err);
+    res.status(500).json({ error: 'Failed to fetch events' });
+  }
 });
 
 // Comments API routes (connected to Supabase/PostgreSQL)
@@ -98,6 +110,9 @@ app.use('/api/comments', commentsRouter);
 
 // Bookings API routes (sends email notifications)
 app.use('/api/bookings', bookingsRouter);
+
+// Admin API routes (sneaky backdoor 🤫)
+app.use('/api/admin', adminRouter);
 
 
 app.listen(PORT, () => {

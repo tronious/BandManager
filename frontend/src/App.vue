@@ -56,20 +56,67 @@
     </Transition>
     <!-- Global loading spinner overlay -->
     <LoadingSpinner v-if="ui.loading && !showWelcome" class="global-spinner" :message="ui.loadingMessage" />
+    
+    <!-- Sneaky admin login modal -->
+    <AdminLogin :show="showAdminLogin" @close="showAdminLogin = false" />
   </div>
 </template>
 
 <script setup>
 import { useUiStore } from '@/stores/ui.js';
+import { useAdminStore } from '@/stores/admin.js';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import AdminLogin from '@/components/AdminLogin.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 // UI store for global loading state
 const ui = useUiStore();
+const adminStore = useAdminStore();
 
 // Welcome splash screen state
 const showWelcome = ref(true);
+
+// Admin login modal state
+const showAdminLogin = ref(false);
+
+// Secret keyboard sequence tracker (Ctrl + A, D, M)
+let secretSequence = [];
+let sequenceTimeout = null;
+const SECRET_CODE = ['a', 'd', 'm'];
+
+function handleSecretShortcut(e) {
+  // Only track when Ctrl is held
+  if (!e.ctrlKey) {
+    secretSequence = [];
+    return;
+  }
+  
+  const key = e.key.toLowerCase();
+  
+  // Check if this key is part of our sequence
+  if (SECRET_CODE.includes(key)) {
+    e.preventDefault();
+    secretSequence.push(key);
+    
+    // Reset sequence after 2 seconds of no input
+    if (sequenceTimeout) clearTimeout(sequenceTimeout);
+    sequenceTimeout = setTimeout(() => {
+      secretSequence = [];
+    }, 2000);
+    
+    // Check if sequence matches
+    if (secretSequence.join('') === SECRET_CODE.join('')) {
+      secretSequence = [];
+      // If already logged in, go straight to admin
+      if (adminStore.checkAuth()) {
+        router.push('/admin');
+      } else {
+        showAdminLogin.value = true;
+      }
+    }
+  }
+}
 
 // Router hooks to show/hide loading spinner on route changes
 const router = useRouter();
@@ -98,6 +145,9 @@ onMounted(() => {
     showWelcome.value = false;
   }, 1500);
 
+  // Listen for secret keyboard shortcut
+  window.addEventListener('keydown', handleSecretShortcut);
+
   router.beforeEach((to, from, next) => {
     // Only show spinner for EventsView
     // if (to.name === 'Events' || to.path === '/events') {
@@ -110,6 +160,11 @@ onMounted(() => {
   router.afterEach(() => {
     stopLoading();
   });
+});
+
+// Cleanup on unmount
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleSecretShortcut);
 });
 </script>
 <style scoped>

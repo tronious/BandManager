@@ -45,14 +45,19 @@ export default {
     }
   },
   computed: {
+    // Parse date as local time to avoid timezone shifts
+    localDate() {
+      const [year, month, day] = this.event.date.split('-').map(Number)
+      return new Date(year, month - 1, day)
+    },
     day() {
-      return new Date(this.event.date).getDate()
+      return this.localDate.getDate()
     },
     month() {
-      return new Date(this.event.date).toLocaleDateString('en-US', { month: 'short' })
+      return this.localDate.toLocaleDateString('en-US', { month: 'short' })
     },
     fullDate() {
-      return new Date(this.event.date).toLocaleDateString('en-US', {
+      return this.localDate.toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
