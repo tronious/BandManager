@@ -14,7 +14,7 @@ todo: hook this into live data  -->
     </div>
     <button class="event-action" @click="$emit('openComments')">
       <span>💬</span>
-      <span>Leave a Comment</span>
+      <span class="action-text">Leave a Comment</span>
       <span v-if="commentCount > 0" class="comment-count">{{ commentCount }}</span>
     </button>
     <!-- Hidden for now until setlist feature is ready
@@ -131,6 +131,12 @@ export default {
   color: var(--text-muted);
 }
 
+@media (max-width: 768px) and (orientation: portrait) {
+  .event-info {
+    display: none;
+  }
+}
+
 .event-action {
   display: flex;
   align-items: center;
@@ -216,27 +222,48 @@ export default {
 
   .event-action {
     padding: 0.5rem 0.8rem;
-    font-size: 0.8rem;
+    font-size: 1.4rem;
   }
 }
 
 @media (max-width: 640px) {
   .event-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 1rem;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem 1rem;
     gap: 0.75rem;
   }
 
   .event-date {
-    min-width: 50px;
-    height: 50px;
+    min-width: 45px;
+    height: 45px;
+  }
+
+  .event-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .event-name {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .event-info {
+    display: none;
   }
 
   .event-action {
-    width: 100%;
-    justify-content: center;
-    padding: 0.5rem 0.8rem;
+    width: auto;
+    padding: 0.5rem;
+    margin-left: auto;
+  }
+
+  .action-text {
+    display: none;
   }
 }
 </style>
