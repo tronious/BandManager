@@ -71,7 +71,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(226, 14, 14, 0.8);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
   z-index: 10;
 }

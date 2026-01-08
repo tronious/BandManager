@@ -40,12 +40,12 @@ const router = createRouter({
 
 let loadingTimeout = null;
 router.beforeEach((to, from, next) => {
-  const ui = useUiStore();
-  ui.showLoading();
-  if (loadingTimeout) clearTimeout(loadingTimeout);
-  loadingTimeout = setTimeout(() => {
-    ui.hideLoading();
-  }, 1500);
+  // const ui = useUiStore();
+  // ui.showLoading();
+  // if (loadingTimeout) clearTimeout(loadingTimeout);
+  // loadingTimeout = setTimeout(() => {
+  //   ui.hideLoading();
+  // }, 2000);
   next();
 });
 
@@ -55,7 +55,7 @@ router.afterEach(() => {
   if (loadingTimeout) {
     // setTimeout(() => ui.hideLoading(), 2000);
   } else {
-    ui.hideLoading();
+    // ui.hideLoading();
   }
 });
 

@@ -108,6 +108,7 @@
 
 <script>
 import PageHeader from '@/components/PageHeader.vue'
+import { useUiStore } from '@/stores/ui'
 
 export default {
   name: 'BookingsView',
@@ -132,9 +133,11 @@ export default {
   },
   methods: {
     async submitBooking() {
+      const ui = useUiStore()
       this.isSubmitting = true
       this.submitError = ''
       this.submitSuccess = false
+      ui.showLoading('Sending your inquiry...')
 
       try {
         const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
@@ -168,6 +171,7 @@ export default {
       } catch (err) {
         this.submitError = err.message || 'Something went wrong. Please try again.'
       } finally {
+        ui.hideLoading()
         this.isSubmitting = false
       }
     }

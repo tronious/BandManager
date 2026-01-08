@@ -55,7 +55,7 @@
       </div>
     </Transition>
     <!-- Global loading spinner overlay -->
-    <LoadingSpinner v-if="ui.loading && !showWelcome" class="global-spinner" message="Getting the latest events..." />
+    <LoadingSpinner v-if="ui.loading && !showWelcome" class="global-spinner" :message="ui.loadingMessage" />
   </div>
 </template>
 
@@ -100,11 +100,11 @@ onMounted(() => {
 
   router.beforeEach((to, from, next) => {
     // Only show spinner for EventsView
-    if (to.name === 'Events' || to.path === '/events') {
-      startLoading();
-    } else {
-      ui.hideLoading();
-    }
+    // if (to.name === 'Events' || to.path === '/events') {
+    //   startLoading();
+    // } else {
+    //   ui.hideLoading();
+    // }
     next();
   });
   router.afterEach(() => {
@@ -219,7 +219,7 @@ onMounted(() => {
   position: fixed;
   inset: 0;
   margin: 0;
-  background: radial-gradient(ellipse at center, #1a1a1f 0%, #0a0a0b 100%);
+  background: radial-gradient(ellipse at center, rgba(26, 26, 31, 0.7) 0%, rgba(10, 10, 11, 0.75) 100%);
   z-index: 99999;
   display: flex;
   flex-direction: column;

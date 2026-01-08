@@ -67,6 +67,7 @@
 import { ref, computed, watch } from 'vue'
 import BaseModal from '@/components/BaseModal.vue'
 import { useCommentsStore } from '@/stores/comments'
+import { useUiStore } from '@/stores/ui'
 
 const props = defineProps({
   show: {
@@ -86,6 +87,7 @@ const props = defineProps({
 const emit = defineEmits(['close'])
 
 const commentsStore = useCommentsStore()
+const uiStore = useUiStore()
 
 // Form state
 const authorName = ref('')
@@ -99,9 +101,14 @@ const comments = computed(() => commentsStore.getComments(props.eventId))
 const isLoading = computed(() => commentsStore.isLoading(props.eventId))
 
 // Fetch comments when modal opens
-watch(() => props.show, (newVal) => {
+watch(() => props.show, async (newVal) => {
   if (newVal && props.eventId) {
-    commentsStore.fetchComments(props.eventId)
+    uiStore.showLoading('Loading comments...')
+    try {
+      await commentsStore.fetchComments(props.eventId)
+    } finally {
+      uiStore.hideLoading()
+    }
   }
 })
 
@@ -120,6 +127,7 @@ async function submitComment() {
   isSubmitting.value = true
   submitError.value = ''
   submitSuccess.value = false
+  uiStore.showLoading('Posting your comment...')
   
   try {
     await commentsStore.postComment(props.eventId, authorName.value, message.value)
@@ -134,6 +142,7 @@ async function submitComment() {
   } catch (err) {
     submitError.value = err.message
   } finally {
+    uiStore.hideLoading()
     isSubmitting.value = false
   }
 }
