@@ -35,15 +35,26 @@ export default {
     },
     // Extract video ID from full YouTube URL
     videoId() {
-      const match = this.url.match(/[?&]v=([\w-]{11})/) || this.url.match(/youtu\.be\/([\w-]{11})/);
+      // First try the standard watch URL format
+      let match = this.url.match(/[?&]v=([\w-]{11})/);
+      if (match) return match[1];
+      // Try youtu.be short URL format
+      match = this.url.match(/youtu\.be\/([\w-]{11})/);
+      if (match) return match[1];
+      // Try embed URL format
+      match = this.url.match(/\/embed\/([\w-]{11})/);
       return match ? match[1] : '';
     },
     // Use embed URL directly if provided, otherwise construct from video ID
     embedUrl() {
-      if (this.isEmbedUrl) {
+      if (this.isEmbedUrl && this.url.includes('youtube.com/embed/')) {
         return this.url;
       }
-      return `https://www.youtube.com/embed/${this.videoId}?rel=0&modestbranding=1`;
+      const videoId = this.videoId;
+      if (!videoId) {
+        return this.url; // fallback to original URL if we can't extract ID
+      }
+      return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
     }
   }
 }
