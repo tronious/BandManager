@@ -340,7 +340,7 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* Floating music notes - hide on mobile to reduce clutter */
+/* Floating music notes */
 .notes-bg {
   position: fixed;
   top: 0;
@@ -350,12 +350,6 @@ onMounted(() => {
   pointer-events: none;
   overflow: hidden;
   z-index: 1;
-}
-
-@media (max-width: 768px) {
-  .notes-bg {
-    display: none;
-  }
 }
 
 .note {
