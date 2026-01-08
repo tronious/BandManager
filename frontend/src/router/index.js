@@ -1,7 +1,7 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 import EventsPage from '../views/EventsPage.vue'
-import LibraryPage from '../views/LibraryPage.vue'
+import BookingsView from '../views/BookingsView.vue'
 import SetlistPage from '../views/SetlistPage.vue'
 import VideosPage from '../views/VideosPage.vue'
 import { useUiStore } from '@/stores/ui.js';
@@ -17,9 +17,9 @@ const routes = [
     component: EventsPage
   },
   {
-    path: '/library',
-    name: 'Library',
-    component: LibraryPage
+    path: '/book',
+    name: 'BookUs',
+    component: BookingsView
   },
   {
     path: '/setlist',
@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
   if (loadingTimeout) clearTimeout(loadingTimeout);
   loadingTimeout = setTimeout(() => {
     ui.hideLoading();
-  }, 2000);
+  }, 1500);
   next();
 });
 

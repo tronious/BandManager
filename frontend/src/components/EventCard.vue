@@ -12,22 +12,34 @@ todo: hook this into live data  -->
       <h3 class="event-name">{{ event.name }}</h3>
       <p class="event-info">{{ fullDate }}</p>
     </div>
+    <button class="event-action" @click="$emit('openComments')">
+      <span>💬</span>
+      <span>Leave a Comment</span>
+      <span v-if="commentCount > 0" class="comment-count">{{ commentCount }}</span>
+    </button>
+    <!-- Hidden for now until setlist feature is ready
     <RouterLink :to="`/events/${event.id}/setlist`" class="event-action">
       <span>Open Setlist</span>
       <span class="arrow">→</span>
     </RouterLink>
+    -->
   </article>
 </template>
 
 <script>
 export default {
   name: 'EventCard',
+  emits: ['openComments'],
   props: {
     event: {
       type: Object,
       required: true
     },
     animationDelay: {
+      type: Number,
+      default: 0
+    },
+    commentCount: {
       type: Number,
       default: 0
     }
@@ -133,6 +145,26 @@ export default {
   background: var(--text-primary);
   border-color: var(--text-primary);
   color: var(--bg-primary);
+}
+
+.event-action:hover .comment-count {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.comment-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.375rem;
+  background: #ff6b6b;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
 }
 
 .event-action .arrow {

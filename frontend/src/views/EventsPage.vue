@@ -1,8 +1,8 @@
 <template>
   <div class="page">
     <PageHeader
-      title="Upcoming Events"
-      subtitle="Your gigs and setlists, all in one place"
+      title="Come see us play live!"
+      subtitle="Upcoming gigs and shows where you can see us live!"
     />
 
     <LoadingSpinner v-if="loading" message="Loading events..." />
@@ -26,38 +26,67 @@
         :key="event.id"
         :event="event"
         :animation-delay="index * 0.1"
+        :comment-count="getCommentCount(event.id)"
+        @openComments="openCommentModal(event)"
       />
     </div>
+
+    <!-- Comment Modal -->
+    <CommentModal
+      :show="showCommentModal"
+      :event-id="selectedEvent?.id"
+      :event-name="selectedEvent?.name"
+      @close="closeCommentModal"
+    />
   </div>
 </template>
 
 <script>
 import EventCard from '@/components/EventCard.vue'
+import CommentModal from '@/components/CommentModal.vue'
 import PageHeader from '@/components/PageHeader.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import ErrorState from '@/components/ErrorState.vue'
+import { useCommentsStore } from '@/stores/comments'
 
 export default {
   name: 'EventsPage',
   components: {
     EventCard,
+    CommentModal,
     PageHeader,
     LoadingSpinner,
     EmptyState,
     ErrorState
   },
+  setup() {
+    const commentsStore = useCommentsStore()
+    return { commentsStore }
+  },
   data() {
     return {
       events: [],
       loading: false,
-      error: null
+      error: null,
+      showCommentModal: false,
+      selectedEvent: null
     }
   },
   async mounted() {
     await this.fetchEvents()
   },
   methods: {
+    getCommentCount(eventId) {
+      return this.commentsStore.getCommentCount(eventId)
+    },
+    openCommentModal(event) {
+      this.selectedEvent = event
+      this.showCommentModal = true
+    },
+    closeCommentModal() {
+      this.showCommentModal = false
+    },
     async fetchEvents() {
       this.loading = false
       this.error = null
@@ -73,6 +102,12 @@ export default {
         ])
         if (!response.ok) throw new Error('Failed to fetch events')
         this.events = await response.json()
+        
+        // Fetch comment counts for all events
+        if (this.events.length > 0) {
+          const eventIds = this.events.map(e => e.id)
+          await this.commentsStore.fetchCommentCounts(eventIds)
+        }
       } catch (err) {
         this.error = err.message
       } finally {

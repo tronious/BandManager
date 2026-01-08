@@ -15,6 +15,10 @@ express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+// Import routes
+const commentsRouter = require('./routes/comments');
+const bookingsRouter = require('./routes/bookings');
+
 const app = express();
 
 // read the azure port from the environment variable or default to 8080
@@ -22,9 +26,26 @@ const PORT = process.env.PORT || 8080;
 
 // middleware
 
-// CORS - restrict to your frontend domain only
+// CORS - allow any localhost port in development, strict in production
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'https://troniousmusic.com',
+  origin: function (origin, callback) {
+    const productionUrl = process.env.FRONTEND_URL || 'https://troniousmusic.com';
+    
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    // In development, allow any localhost port
+    if (origin.match(/^http:\/\/localhost:\d+$/)) {
+      return callback(null, true);
+    }
+    
+    // In production, only allow the configured frontend URL
+    if (origin === productionUrl) {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   optionsSuccessStatus: 200
 };
 
@@ -71,6 +92,12 @@ app.get('/api/events', (req, res) => {
   ]);
   console.log('GET /api/events called');
 });
+
+// Comments API routes (connected to Supabase/PostgreSQL)
+app.use('/api/comments', commentsRouter);
+
+// Bookings API routes (sends email notifications)
+app.use('/api/bookings', bookingsRouter);
 
 
 app.listen(PORT, () => {
