@@ -27,7 +27,7 @@
         </div>
         <nav class="nav">
           <RouterLink to="/events" class="nav-link">
-            Upcoming Shows
+            Gigs
           </RouterLink>
           <RouterLink to="/book" class="nav-link">
             Book Us!
