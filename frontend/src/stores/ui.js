@@ -5,18 +5,34 @@ export const useUiStore = defineStore('ui', {
     loading: false,
     loadingMessage: '',
     loadingStartTime: null,
-    hideTimeout: null
+    hideTimeout: null,
+    autoHideTimeout: null
   }),
   actions: {
-    showLoading(message = 'Loading...') {
-      // Clear any pending hide timeout
+    showLoading(message = 'Loading...', duration = null) {
+      // Clear any pending timeouts
       if (this.hideTimeout) {
         clearTimeout(this.hideTimeout);
         this.hideTimeout = null;
       }
+      if (this.autoHideTimeout) {
+        clearTimeout(this.autoHideTimeout);
+        this.autoHideTimeout = null;
+      }
+      
       this.loadingMessage = message;
       this.loading = true;
       this.loadingStartTime = Date.now();
+      
+      // Auto-hide after duration if specified
+      if (duration) {
+        this.autoHideTimeout = setTimeout(() => {
+          this.loading = false;
+          this.loadingMessage = '';
+          this.loadingStartTime = null;
+          this.autoHideTimeout = null;
+        }, duration);
+      }
     },
     hideLoading() {
       const minDisplayTime = 3000; // 2 seconds minimum

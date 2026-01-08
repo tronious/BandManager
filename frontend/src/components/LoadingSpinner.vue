@@ -82,6 +82,6 @@ export default {
 }
 .loading-state p {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 1.2rem;
 }
 </style>

@@ -49,6 +49,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import ErrorState from '@/components/ErrorState.vue'
 import { useCommentsStore } from '@/stores/comments'
+import { useUiStore } from '@/stores/ui'
 
 export default {
   name: 'EventsPage',
@@ -62,7 +63,8 @@ export default {
   },
   setup() {
     const commentsStore = useCommentsStore()
-    return { commentsStore }
+    const uiStore = useUiStore()
+    return { commentsStore, uiStore }
   },
   data() {
     return {
@@ -90,16 +92,15 @@ export default {
     async fetchEvents() {
       this.loading = false
       this.error = null
+      this.uiStore.showLoading('Loading events...', 1000)
+      const startTime = Date.now()
+      
       try {
-        // Run API call and minimum delay in parallel
-        const [response] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
-            headers: {
-              'x-api-key': import.meta.env.VITE_API_KEY
-            }
-          }),
-        //   new Promise(resolve => setTimeout(resolve, 2000))
-        ])
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
+          headers: {
+            'x-api-key': import.meta.env.VITE_API_KEY
+          }
+        })
         if (!response.ok) throw new Error('Failed to fetch events')
         this.events = await response.json()
         
@@ -111,6 +112,11 @@ export default {
       } catch (err) {
         this.error = err.message
       } finally {
+        // Ensure spinner shows for at least 1500ms
+       
+        setTimeout(() => {
+          this.uiStore.hideLoading()
+        }, 1000)
         this.loading = false
       }
     }

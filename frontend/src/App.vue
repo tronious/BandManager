@@ -41,6 +41,9 @@
       <main class="content">
         <RouterView />
       </main>
+      
+      <!-- Floating tip jar -->
+      <TipJar v-if="!showWelcome" />
     </div>
     <!-- Welcome splash screen on initial load -->
     <Transition name="fade">
@@ -67,6 +70,7 @@ import { useUiStore } from '@/stores/ui.js';
 import { useAdminStore } from '@/stores/admin.js';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AdminLogin from '@/components/AdminLogin.vue';
+import TipJar from '@/components/TipJar.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
