@@ -64,7 +64,11 @@ export default {
       try {
         // Run API call and minimum delay in parallel
         const [response] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/api/events`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/events`, {
+            headers: {
+              'x-api-key': import.meta.env.VITE_API_KEY
+            }
+          }),
         //   new Promise(resolve => setTimeout(resolve, 2000))
         ])
         if (!response.ok) throw new Error('Failed to fetch events')

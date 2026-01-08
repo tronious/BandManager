@@ -22,11 +22,37 @@ const PORT = process.env.PORT || 8080;
 
 // middleware
 
-// enable CORS for all routes
-app.use(cors());
+// CORS - restrict to your frontend domain only
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'https://troniousmusic.com',
+  optionsSuccessStatus: 200
+};
+
+// API key middleware for additional security
+const apiKeyAuth = (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+  const validKey = process.env.API_KEY;
+  
+  // Skip auth for health check
+  if (req.path === '/health') {
+    return next();
+  }
+  
+  if (!validKey || !apiKey || apiKey !== validKey) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
+  next();
+};
+
+// enable CORS for specific origin only
+app.use(cors(corsOptions));
 
 // parse JSON bodies
 app.use(express.json());
+
+// apply API key authentication
+app.use(apiKeyAuth);
 
 // health check
 app.get('/health', (req, res) => {
