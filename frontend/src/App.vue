@@ -1,25 +1,8 @@
 <template>
   <div>
     <div class="app">
-      <!-- Floating music notes background -->
-      <!-- Each note is absolutely positioned and animated
-        hacky?  Maybe...cool?  Absolutely  -->
-      <div class="notes-bg" aria-hidden="true">
-        <span class="note note-1">♪</span>
-        <span class="note note-2">♫</span>
-        <span class="note note-3">♪</span>
-        <span class="note note-4">♫</span>
-        <span class="note note-5">♪</span>
-        <span class="note note-6">♫</span>
-        <span class="note note-7">♪</span>
-        <span class="note note-8">♫</span>
-        <span class="note note-9">♪</span>
-        <span class="note note-10">♫</span>
-        <span class="note note-11">♪</span>
-        <span class="note note-12">♫</span>
-        <span class="note note-13">♪</span>
-        <span class="note note-14">♫</span>
-      </div>
+      <!-- Floating music notes background with physics-based bouncing -->
+      <BouncingNotes />
 
       <header class="topbar">
         <div class="logo">
@@ -71,6 +54,7 @@ import { useAdminStore } from '@/stores/admin.js';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AdminLogin from '@/components/AdminLogin.vue';
 import TipJar from '@/components/TipJar.vue';
+import BouncingNotes from '@/components/BouncingNotes.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -398,59 +382,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   overflow: auto;
-}
-
-/* Floating music notes */
-.notes-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.note {
-  position: absolute;
-  font-size: 2.2rem;
-  color: rgba(255, 255, 255, 0.9);
-  animation: float 20s ease-in-out infinite;
-}
-
-.note-1 { left: 5%; top: 20%; animation-delay: 0s; animation-duration: 13s; color: rgba(250, 204, 21, 0.8); }
-.note-2 { left: 15%; top: 60%; animation-delay: -2.5s; animation-duration: 11s; font-size: 3rem; color: rgba(248, 113, 113, 0.8); }
-.note-3 { left: 30%; top: 40%; animation-delay: -5s; animation-duration: 14s; color: rgba(250, 204, 21, 0.8); }
-.note-4 { left: 50%; top: 80%; animation-delay: -1.5s; animation-duration: 12s; font-size: 2.7rem; color: rgba(248, 113, 113, 0.8); }
-.note-5 { left: 65%; top: 25%; animation-delay: -4s; animation-duration: 13s; color: rgba(250, 204, 21, 0.8); }
-.note-6 { left: 80%; top: 55%; animation-delay: -6s; animation-duration: 11.5s; font-size: 3.5rem; color: rgba(248, 113, 113, 0.8); }
-.note-7 { left: 90%; top: 35%; animation-delay: -7.5s; animation-duration: 13.5s; }
-.note-8 { left: 40%; top: 15%; animation-delay: -3.5s; animation-duration: 10.5s; font-size: 2.6rem; color: rgba(250, 204, 21, 0.8); }
-.note-9 { left: 10%; top: 85%; animation-delay: -1s; animation-duration: 15s; font-size: 2.8rem; color: rgba(248, 113, 113, 0.8); }
-.note-10 { left: 75%; top: 70%; animation-delay: -9s; animation-duration: 12s; color: rgba(250, 204, 21, 0.8); }
-.note-11 { left: 55%; top: 45%; animation-delay: -5.5s; animation-duration: 13s; font-size: 3rem; color: rgba(248, 113, 113, 0.8); }
-.note-12 { left: 25%; top: 75%; animation-delay: -3s; animation-duration: 11.5s; color: rgba(250, 204, 21, 0.8); }
-.note-13 { left: 85%; top: 15%; animation-delay: -7s; animation-duration: 13.5s; font-size: 3rem; }
-.note-14 { left: 45%; top: 55%; animation-delay: -4.5s; animation-duration: 12.5s; font-size: 2.3rem; color: rgba(248, 113, 113, 0.8); }
-
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0.25;
-  }
-  25% {
-    transform: translate(30px, -40px) rotate(15deg);
-    opacity: 0.35;
-  }
-  50% {
-    transform: translate(-20px, -80px) rotate(-10deg);
-    opacity: 0.15;
-  }
-  75% {
-    transform: translate(40px, -40px) rotate(20deg);
-    opacity: 0.3;
-  }
 }
 
 @media (max-width: 640px) {

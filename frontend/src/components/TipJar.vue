@@ -18,7 +18,7 @@
 <style scoped>
 .tip-jar {
   position: fixed;
-  bottom: 2rem;
+  /* bottom: 2rem; */
   right: 1rem;
   display: flex;
   flex-direction: column;
@@ -57,8 +57,8 @@
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
 }
 
 /* Mobile adjustments */

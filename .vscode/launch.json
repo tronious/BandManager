@@ -1,0 +1,63 @@
+// VS Code Debug Configuration
+// Press F5 to launch, or use Run > Start Debugging
+// Select "Full Stack (Frontend + Backend)" to run everything at once
+{
+  "version": "0.2.0",
+  "configurations": [
+    // BACKEND: Runs Node.js with debugger attached
+    // Set breakpoints in any .js file in /backend
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Backend",
+      "skipFiles": ["<node_internals>/**"], // Skip Node internals when stepping through code
+      "program": "${workspaceFolder}/backend/index.js", // Entry point
+      "cwd": "${workspaceFolder}/backend", // Working directory
+      "envFile": "${workspaceFolder}/backend/.env", // Load environment variables
+      "restart": true, // Auto-restart if server crashes
+      "console": "integratedTerminal" // Show output in VS Code terminal
+    },
+
+    // FRONTEND: Runs Vite dev server and opens Chrome with debugger
+    // Set breakpoints in .vue files (requires sourcemaps enabled in vite.config.js)
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Frontend Dev Server",
+      "cwd": "${workspaceFolder}/frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"], // Runs: npm run dev
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        // When Vite prints "Local: http://localhost:5173", auto-open Chrome
+        "pattern": "Local:.*(https?://localhost:[0-9]+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome", // Opens Chrome with debugging attached
+        "webRoot": "${workspaceFolder}/frontend" // Maps source files for breakpoints
+      }
+    },
+
+    // STANDALONE CHROME: Use if you need to attach to an already-running frontend
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug Frontend in Chrome",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/src",
+      "sourceMaps": true, // Required for .vue file breakpoints
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*",
+        "webpack:///./*": "${webRoot}/*"
+      }
+    }
+  ],
+
+  // COMPOUND: Launches multiple configs together
+  "compounds": [
+    {
+      "name": "Full Stack (Frontend + Backend)", // <-- USE THIS ONE!
+      "configurations": ["Debug Backend", "Frontend Dev Server"],
+      "stopAll": true // Stopping one stops both
+    }
+  ]
+}

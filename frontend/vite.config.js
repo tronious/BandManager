@@ -9,9 +9,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'BandManager',
-        short_name: 'BandManager',
-        description: 'Manage your band events, setlists, and song library',
+        name: 'Tronious',
+        short_name: 'Tronious',
+        description: 'The official page for Tronious',
         theme_color: '#1a1a2e',
         background_color: '#1a1a2e',
         display: 'standalone',
@@ -34,6 +34,15 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  // SOURCE MAPS: Required for VS Code breakpoints in .vue files
+  // Maps compiled browser code back to your original source files
+  // Only enabled in development for security
+  build: {
+    sourcemap: process.env.NODE_ENV === 'development'
+  },
+  css: {
+    devSourcemap: true // Only applies to dev server, not production
   },
   server: {
     proxy: {

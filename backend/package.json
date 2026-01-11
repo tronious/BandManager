@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "debug": "node --inspect index.js",
+    "debug:watch": "nodemon --inspect index.js",
     "test": "echo \"No tests yet\" && exit 0"
   },
   "engines": {
