@@ -69,6 +69,7 @@ import BaseModal from '@/components/BaseModal.vue'
 import { useCommentsStore } from '@/stores/comments'
 import { useUiStore } from '@/stores/ui'
 
+// def
 const props = defineProps({
   show: {
     type: Boolean,

@@ -5,18 +5,20 @@
       <BouncingNotes />
 
       <header class="topbar">
-        <div class="logo">
-          <h1><span class="logo-text">Tronious</span> <span class="logo-accent">Music</span></h1>
+        <div class="logo-group">
+          <div class="logo">
+            <h1><span class="logo-text">Tronious</span> <span class="logo-accent">Music</span></h1>
+          </div>
+          <TipButton @click="showTipModal = true" />
         </div>
         <nav class="nav">
           <RouterLink to="/events" class="nav-link">
             Gigs
+          </RouterLink>          <RouterLink to="/videos" class="nav-link">
+            Videos
           </RouterLink>
           <RouterLink to="/book" class="nav-link">
             Book Us!
-          </RouterLink>
-          <RouterLink to="/videos" class="nav-link">
-            Videos
           </RouterLink>
         </nav>
       </header>
@@ -24,9 +26,6 @@
       <main class="content">
         <RouterView />
       </main>
-      
-      <!-- Floating tip jar -->
-      <TipJar v-if="!showWelcome" />
     </div>
     <!-- Welcome splash screen on initial load -->
     <Transition name="fade">
@@ -40,11 +39,14 @@
         <p class="welcome-subtext">Let the music move you...</p>
       </div>
     </Transition>
-    <!-- Global loading spinner overlay -->
+    <!-- Global loading spinner overlay...this is controlled by the UI store in stores/ui.js -->
     <LoadingSpinner v-if="ui.loading && !showWelcome" class="global-spinner" :message="ui.loadingMessage" />
     
     <!-- Sneaky admin login modal -->
     <AdminLogin :show="showAdminLogin" @close="showAdminLogin = false" />
+    
+    <!-- Tip modal -->
+    <TipModal :show="showTipModal" @close="showTipModal = false" />
   </div>
 </template>
 
@@ -54,6 +56,8 @@ import { useAdminStore } from '@/stores/admin.js';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import AdminLogin from '@/components/AdminLogin.vue';
 import TipJar from '@/components/TipJar.vue';
+import TipButton from '@/components/TipButton.vue';
+import TipModal from '@/components/TipModal.vue';
 import BouncingNotes from '@/components/BouncingNotes.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -67,6 +71,9 @@ const showWelcome = ref(true);
 
 // Admin login modal state
 const showAdminLogin = ref(false);
+
+// Tip modal state
+const showTipModal = ref(false);
 
 // Secret keyboard sequence tracker (Ctrl + A, D, M)
 let secretSequence = [];
@@ -324,6 +331,12 @@ onUnmounted(() => {
 .logo {
   display: flex;
   align-items: center;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .logo h1 {
