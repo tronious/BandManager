@@ -41,7 +41,7 @@ export function EventsPage() {
 
   return (
     <div className="page">
-      <PageHeader title="Come see us play live!" />
+      <PageHeader title="Come see us play live! - React" />
 
       {loading ? <LoadingSpinner message="Loading events..." /> : null}
 
