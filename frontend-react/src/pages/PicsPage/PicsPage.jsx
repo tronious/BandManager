@@ -18,8 +18,8 @@ function parseLocalDate(dateString) {
 function formatEventLabel(event) {
   const date = parseLocalDate(event?.date)
   const dateLabel = date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''
-  const venue = event?.venue ? ` – ${event.venue}` : ''
-  return `${dateLabel} ${event?.name || ''}${venue}`.trim()
+  // Keep this short; native select popups get ugly with long lines.
+  return `${dateLabel} — ${event?.name || ''}`.trim()
 }
 
 function useBodyScrollLock(locked) {
