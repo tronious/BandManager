@@ -26,7 +26,11 @@ const adminAuth = (req, res, next) => {
   const adminPassword = String(req.headers['x-admin-password'] || '').trim();
   const validPassword = String(process.env.ADMIN_PIN || process.env.ADMIN_PASSWORD || '').trim();
 
-  if (!validPassword || !adminPassword || adminPassword !== validPassword) {
+  if (!validPassword) {
+    return res.status(500).json({ error: 'Admin PIN not configured on server (set ADMIN_PIN or ADMIN_PASSWORD).' });
+  }
+
+  if (!adminPassword || adminPassword !== validPassword) {
     return res.status(403).json({ error: 'Access denied' });
   }
   

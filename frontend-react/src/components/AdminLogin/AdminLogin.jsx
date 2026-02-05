@@ -38,7 +38,25 @@ export function AdminLogin({ show, onClose }) {
         },
       })
 
-      if (!response.ok) throw new Error('Wrong PIN, nice try!')
+      if (!response.ok) {
+        let serverMessage = ''
+        try {
+          const data = await response.json()
+          serverMessage = String(data?.error || data?.message || '')
+        } catch {
+          // ignore JSON parse failures
+        }
+
+        if (response.status === 401) {
+          throw new Error('Backend rejected API key (check Azure API_KEY vs VITE_API_KEY).')
+        }
+
+        if (response.status === 403) {
+          throw new Error('Wrong PIN (check backend ADMIN_PIN).')
+        }
+
+        throw new Error(serverMessage || `Login failed (HTTP ${response.status}).`)
+      }
 
       sessionStorage.setItem('adminPassword', password)
       onClose?.()
