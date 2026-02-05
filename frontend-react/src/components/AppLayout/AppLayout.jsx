@@ -14,6 +14,9 @@ export function AppLayout() {
   const secretIndexRef = useRef(0)
   const secretTimerRef = useRef(null)
 
+  const tapCountRef = useRef(0)
+  const tapTimerRef = useRef(null)
+
   useEffect(() => {
     function clearTimer() {
       if (secretTimerRef.current) {
@@ -62,6 +65,36 @@ export function AppLayout() {
     }
   }, [navigate, setShowAdminLogin])
 
+  function openAdminPrompt() {
+    const savedPassword = sessionStorage.getItem('adminPassword')
+    if (savedPassword) navigate('/admin')
+    else setShowAdminLogin(true)
+  }
+
+  function onLogoTap() {
+    tapCountRef.current += 1
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current)
+    tapTimerRef.current = setTimeout(() => {
+      tapCountRef.current = 0
+      tapTimerRef.current = null
+    }, 2500)
+
+    if (tapCountRef.current >= 10) {
+      tapCountRef.current = 0
+      if (tapTimerRef.current) {
+        clearTimeout(tapTimerRef.current)
+        tapTimerRef.current = null
+      }
+      openAdminPrompt()
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (tapTimerRef.current) clearTimeout(tapTimerRef.current)
+    }
+  }, [])
+
   return (
     <div className="app">
       <BouncingNotes />
@@ -70,10 +103,12 @@ export function AppLayout() {
       <header className="topbar">
         <div className="logo-group">
           <div className="logo">
-            <h1>
-              <span className="logo-text">Tronious</span>{' '}
-              <span className="logo-accent">Music</span>
-            </h1>
+            <button type="button" className="logo-button" onClick={onLogoTap} aria-label="Tronious Music">
+              <h1>
+                <span className="logo-text">Tronious</span>{' '}
+                <span className="logo-accent">Music</span>
+              </h1>
+            </button>
           </div>
           <TipButton onClick={() => setShowTipModal(true)} />
         </div>
@@ -84,6 +119,9 @@ export function AppLayout() {
           </NavLink>
           <NavLink to="/videos" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
             Videos
+          </NavLink>
+          <NavLink to="/pics" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+            PICS!
           </NavLink>
           <NavLink to="/book" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
             Book Us!

@@ -5,7 +5,13 @@ function parseLocalDate(dateString) {
   return new Date(year, month - 1, day)
 }
 
-export function EventCard({ event, animationDelay = 0, commentCount = 0, onOpenComments }) {
+export function EventCard({
+  event,
+  animationDelay = 0,
+  commentCount = 0,
+  onOpenComments,
+  onOpenDetails,
+}) {
   const localDate = parseLocalDate(event?.date)
   const day = localDate.getDate()
   const month = localDate.toLocaleDateString('en-US', { month: 'short' })
@@ -16,8 +22,23 @@ export function EventCard({ event, animationDelay = 0, commentCount = 0, onOpenC
     day: 'numeric',
   })
 
+  function handleKeyDown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      onOpenDetails?.(event)
+    }
+  }
+
   return (
-    <article className="event-card" style={{ animationDelay: `${animationDelay}s` }}>
+    <article
+      className="event-card"
+      style={{ animationDelay: `${animationDelay}s` }}
+      role="button"
+      tabIndex={0}
+      onClick={() => onOpenDetails?.(event)}
+      onKeyDown={handleKeyDown}
+      aria-label={event?.name ? `Open details for ${event.name}` : 'Open event details'}
+    >
       <div className="event-date">
         <span className="date-day">{day}</span>
         <span className="date-month">{month}</span>
@@ -28,7 +49,13 @@ export function EventCard({ event, animationDelay = 0, commentCount = 0, onOpenC
         <p className="event-info">{fullDate}</p>
       </div>
 
-      <button className="event-action" onClick={onOpenComments}>
+      <button
+        className="event-action"
+        onClick={(e) => {
+          e.stopPropagation()
+          onOpenComments?.(event)
+        }}
+      >
         <span>💬</span>
         <span className="action-text">Leave a Comment</span>
         {commentCount > 0 ? <span className="comment-count">{commentCount}</span> : null}

@@ -53,6 +53,13 @@ export function AdminPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [eventToDelete, setEventToDelete] = useState(null)
 
+  const [photoEventId, setPhotoEventId] = useState('')
+  const [eventPhotos, setEventPhotos] = useState([])
+  const [photosLoading, setPhotosLoading] = useState(false)
+  const [photosError, setPhotosError] = useState('')
+  const [showPhotoDeleteModal, setShowPhotoDeleteModal] = useState(false)
+  const [photoToDelete, setPhotoToDelete] = useState(null)
+
   const sortedEvents = useMemo(() => {
     return [...events].sort((a, b) => new Date(a.date) - new Date(b.date))
   }, [events])
@@ -140,6 +147,119 @@ export function AdminPage() {
     fetchEvents()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!photoEventId && sortedEvents.length > 0) {
+      setPhotoEventId(String(sortedEvents[0].id))
+    }
+  }, [photoEventId, sortedEvents])
+
+  async function fetchEventPhotos(eventId) {
+    if (!requireAuthOrPrompt()) return
+    if (!eventId) return
+
+    setPhotosLoading(true)
+    setPhotosError('')
+    try {
+      const response = await adminFetch(`/api/admin/events/${eventId}/photos`)
+      const data = await response.json()
+      setEventPhotos(Array.isArray(data) ? data : [])
+    } catch (err) {
+      setPhotosError(err?.message || 'Failed to fetch photos')
+      if (err?.code === 'AUTH' || err?.code === 'NO_AUTH') setShowAdminLogin(true)
+      setEventPhotos([])
+    } finally {
+      setPhotosLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (photoEventId) fetchEventPhotos(photoEventId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [photoEventId])
+
+  function confirmDeletePhoto(photo) {
+    setPhotoToDelete(photo)
+    setShowPhotoDeleteModal(true)
+  }
+
+  async function onDeletePhoto() {
+    if (!photoToDelete) return
+    if (!requireAuthOrPrompt()) return
+
+    dispatch(showLoading({ message: 'Deleting photo...' }))
+    setPhotosError('')
+
+    try {
+      await adminFetch(`/api/admin/events/${photoEventId}/photos`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: photoToDelete.id,
+          storage_path: photoToDelete.storage_path || (String(photoToDelete.id || '').includes('/') ? photoToDelete.id : undefined),
+        }),
+      })
+
+      const idToRemove = photoToDelete.id
+      const pathToRemove = photoToDelete.storage_path || photoToDelete.id
+      setEventPhotos((prev) => prev.filter((p) => p.id !== idToRemove && p.storage_path !== pathToRemove))
+
+      setShowPhotoDeleteModal(false)
+      setPhotoToDelete(null)
+    } catch (err) {
+      setPhotosError(err?.message || 'Failed to delete photo')
+      if (err?.code === 'AUTH' || err?.code === 'NO_AUTH') setShowAdminLogin(true)
+    } finally {
+      dispatch(hideLoading())
+    }
+  }
+
+  function PhotoThumb({ photo }) {
+    const [pressing, setPressing] = useState(false)
+    const timerRef = useState({ t: null })[0]
+
+    function startPress() {
+      setPressing(true)
+      timerRef.t = setTimeout(() => {
+        timerRef.t = null
+        setPressing(false)
+        confirmDeletePhoto(photo)
+      }, 550)
+    }
+
+    function cancelPress() {
+      setPressing(false)
+      if (timerRef.t) {
+        clearTimeout(timerRef.t)
+        timerRef.t = null
+      }
+    }
+
+    return (
+      <button
+        type="button"
+        className={`admin-photo-thumb${pressing ? ' pressing' : ''}`}
+        onPointerDown={startPress}
+        onPointerUp={cancelPress}
+        onPointerCancel={cancelPress}
+        onPointerLeave={cancelPress}
+        onContextMenu={(e) => {
+          e.preventDefault()
+          cancelPress()
+          confirmDeletePhoto(photo)
+        }}
+        onClick={() => {
+          // Regular click opens in a new tab (long-press deletes)
+          if (photo?.url) window.open(photo.url, '_blank', 'noreferrer')
+        }}
+        aria-label="Photo (long-press to delete)"
+        title="Long-press to delete"
+      >
+        <img src={photo.url} alt={photo.caption || 'Event photo'} loading="lazy" />
+        <span className="admin-photo-hint">Hold to delete</span>
+      </button>
+    )
+  }
 
   function onEditEvent(event) {
     setEditingEvent(event)
@@ -349,6 +469,56 @@ export function AdminPage() {
         ) : null}
       </div>
 
+      <div className="photos-section">
+        <h2>Manage Photos</h2>
+
+        {sortedEvents.length ? (
+          <div className="photos-controls">
+            <label className="photos-label" htmlFor="photoEvent">
+              Event
+            </label>
+            <select
+              id="photoEvent"
+              className="photos-select"
+              value={photoEventId}
+              onChange={(e) => setPhotoEventId(e.target.value)}
+            >
+              {sortedEvents.map((event) => (
+                <option key={event.id} value={event.id}>
+                  {formatDate(event.date)} — {event.name}
+                </option>
+              ))}
+            </select>
+
+            <button type="button" className="photos-refresh" onClick={() => fetchEventPhotos(photoEventId)}>
+              Refresh
+            </button>
+          </div>
+        ) : (
+          <div className="no-events">Add an event first to manage photos.</div>
+        )}
+
+        {photosError ? <p className="admin-error">{photosError}</p> : null}
+
+        {photosLoading ? <div className="loading">Loading photos...</div> : null}
+
+        {!photosLoading && photoEventId && eventPhotos.length === 0 ? (
+          <div className="no-events">No photos for this event yet.</div>
+        ) : null}
+
+        {!photosLoading && eventPhotos.length ? (
+          <div className="admin-photos-grid">
+            {eventPhotos.map((p) => (
+              <PhotoThumb key={p.id || p.storage_path || p.url} photo={p} />
+            ))}
+          </div>
+        ) : null}
+
+        {eventPhotos.length ? (
+          <p className="photos-help">Tip: long-press a photo (or right-click) to delete it.</p>
+        ) : null}
+      </div>
+
       {showDeleteModal ? (
         <div className="admin-modal-overlay" role="dialog" aria-modal="true" aria-label="Delete event confirmation">
           <div className="admin-modal">
@@ -370,6 +540,35 @@ export function AdminPage() {
                   Yes, Delete
                 </button>
                 <button type="button" onClick={() => setShowDeleteModal(false)} className="cancel-btn">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {showPhotoDeleteModal ? (
+        <div className="admin-modal-overlay" role="dialog" aria-modal="true" aria-label="Delete photo confirmation">
+          <div className="admin-modal">
+            <button
+              className="admin-modal-close"
+              type="button"
+              onClick={() => setShowPhotoDeleteModal(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+
+            <div className="delete-confirm">
+              <h3>🗑️ Delete Photo?</h3>
+              {photoToDelete?.url ? <img className="admin-photo-preview" src={photoToDelete.url} alt="Preview" /> : null}
+              <p className="warning">This cannot be undone!</p>
+              <div className="modal-actions">
+                <button type="button" onClick={onDeletePhoto} className="confirm-delete-btn">
+                  Yes, Delete
+                </button>
+                <button type="button" onClick={() => setShowPhotoDeleteModal(false)} className="cancel-btn">
                   Cancel
                 </button>
               </div>

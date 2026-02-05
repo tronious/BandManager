@@ -34,19 +34,17 @@ export function AdminLogin({ show, onClose }) {
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': API_KEY,
-          'x-admin-password': password,
+              'x-admin-password': password,
         },
       })
 
-      if (!response.ok) {
-        throw new Error('Wrong password, nice try! 😏')
-      }
+          if (!response.ok) throw new Error('Wrong PIN, nice try! 😏')
 
       sessionStorage.setItem('adminPassword', password)
       onClose?.()
       navigate('/admin')
     } catch (err) {
-      setError(err?.message || 'Wrong password, nice try! 😏')
+          setError(err?.message || 'Wrong PIN, nice try! 😏')
     } finally {
       setLoading(false)
     }
@@ -69,13 +67,14 @@ export function AdminLogin({ show, onClose }) {
 
           <form onSubmit={handleLogin} className="login-form">
             <div className="form-group">
-              <label htmlFor="admin-password">Password</label>
+                  <label htmlFor="admin-password">PIN</label>
               <input
                 id="admin-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
-                placeholder="Enter the secret password"
+                    inputMode="numeric"
+                    placeholder="Enter PIN"
                 autoComplete="off"
                 required
                 autoFocus

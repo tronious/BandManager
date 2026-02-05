@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { EventCard } from '@/components/EventCard/EventCard.jsx'
+import { EventDetailsModal } from '@/components/EventDetailsModal/EventDetailsModal.jsx'
 import { EmptyState } from '@/components/shared/EmptyState.jsx'
 import { ErrorState } from '@/components/shared/ErrorState.jsx'
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner.jsx'
@@ -13,6 +14,7 @@ export function EventsPage() {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [selectedEvent, setSelectedEvent] = useState(null)
 
   async function fetchEvents() {
     setLoading(true)
@@ -36,12 +38,13 @@ export function EventsPage() {
 
   useEffect(() => {
     fetchEvents()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <div className="page">
       <PageHeader title="Come see us play live! - React" />
+
+      <EventDetailsModal show={!!selectedEvent} event={selectedEvent} onClose={() => setSelectedEvent(null)} />
 
       {loading ? <LoadingSpinner message="Loading events..." /> : null}
 
@@ -59,6 +62,7 @@ export function EventsPage() {
               event={event}
               animationDelay={index * 0.1}
               commentCount={0}
+              onOpenDetails={() => setSelectedEvent(event)}
               onOpenComments={() => {
                 // Comment modal port will come next
               }}

@@ -19,8 +19,12 @@ require('dotenv').config();
 const commentsRouter = require('./routes/comments');
 const bookingsRouter = require('./routes/bookings');
 const adminRouter = require('./routes/admin');
+const photosRouter = require('./routes/photos');
 
 const app = express();
+
+// Needed for correct req.ip when behind proxies (Azure/Cloudflare)
+app.set('trust proxy', 1);
 
 // read the azure port from the environment variable or default to 8080
 const PORT = process.env.PORT || 8080;
@@ -114,6 +118,9 @@ app.use('/api/bookings', bookingsRouter);
 
 // Admin API routes (sneaky backdoor 🤫)
 app.use('/api/admin', adminRouter);
+
+// Event photos API routes (uploads + gallery)
+app.use('/api', photosRouter);
 
 
 app.listen(PORT, () => {

@@ -8,6 +8,16 @@
   padding: 1.25rem 1.5rem;
   transition: var(--transition);
   animation: slideIn 0.4s ease backwards;
+  cursor: pointer;
+}
+
+.event-card:focus {
+  outline: none;
+}
+
+.event-card:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
 }
 
 .event-card:hover {

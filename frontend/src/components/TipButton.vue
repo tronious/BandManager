@@ -45,7 +45,7 @@ defineEmits(['click'])
 }
 
 .tip-button__text {
-  font-size: 0.85rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #fff;
   text-transform: uppercase;
