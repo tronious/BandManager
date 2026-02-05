@@ -104,7 +104,6 @@
   flex-direction: column;
   overflow: auto;
   position: relative;
-  z-index: 2;
 }
 
 @media (max-width: 640px) {

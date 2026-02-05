@@ -23,6 +23,12 @@ const photosRouter = require('./routes/photos');
 
 const app = express();
 
+// Safe config presence logs (helps debug Azure App Settings)
+console.log('[config] API_KEY configured:', Boolean(process.env.API_KEY));
+console.log('[config] ADMIN_PIN configured:', Boolean(process.env.ADMIN_PIN));
+console.log('[config] ADMIN_PASSWORD configured:', Boolean(process.env.ADMIN_PASSWORD));
+console.log('[config] FRONTEND_URL:', process.env.FRONTEND_URL || '(not set)');
+
 // Needed for correct req.ip when behind proxies (Azure/Cloudflare)
 app.set('trust proxy', 1);
 
