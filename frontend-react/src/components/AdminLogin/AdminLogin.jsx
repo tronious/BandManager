@@ -34,17 +34,17 @@ export function AdminLogin({ show, onClose }) {
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': API_KEY,
-              'x-admin-password': password,
+          'x-admin-password': password,
         },
       })
 
-          if (!response.ok) throw new Error('Wrong PIN, nice try! 😏')
+      if (!response.ok) throw new Error('Wrong PIN, nice try!')
 
       sessionStorage.setItem('adminPassword', password)
       onClose?.()
       navigate('/admin')
     } catch (err) {
-          setError(err?.message || 'Wrong PIN, nice try! 😏')
+      setError(err?.message || 'Wrong PIN, nice try!')
     } finally {
       setLoading(false)
     }
@@ -71,9 +71,10 @@ export function AdminLogin({ show, onClose }) {
               <input
                 id="admin-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(String(e.target.value || '').replace(/\D/g, ''))}
                 type="password"
                     inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="Enter PIN"
                 autoComplete="off"
                 required

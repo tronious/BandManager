@@ -23,9 +23,9 @@ const getPublicUrl = (bucket, path) => {
 
 // Admin authentication middleware
 const adminAuth = (req, res, next) => {
-  const adminPassword = req.headers['x-admin-password'];
-  const validPassword = process.env.ADMIN_PASSWORD;
-  
+  const adminPassword = String(req.headers['x-admin-password'] || '').trim();
+  const validPassword = String(process.env.ADMIN_PIN || process.env.ADMIN_PASSWORD || '').trim();
+
   if (!validPassword || !adminPassword || adminPassword !== validPassword) {
     return res.status(403).json({ error: 'Access denied' });
   }
