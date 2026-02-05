@@ -104,13 +104,14 @@ export function AppLayout() {
         <div className="logo-group">
           <div className="logo">
             <button type="button" className="logo-button" onClick={onLogoTap} aria-label="Tronious Music">
-              <h1>
-                <span className="logo-text">Tronious</span>{' '}
-                <span className="logo-accent">Music</span>
-              </h1>
+              <div className="logo-header" aria-hidden="true" />
+              {/* <h1> */}
+                {/* <span className="logo-text">Tronious</span>{' '}
+                <span className="logo-accent">Music</span> */}
+              {/* </h1> */}
             </button>
           </div>
-          <TipButton onClick={() => setShowTipModal(true)} />
+          <TipButton style={{display: 'none'}} onClick={() => setShowTipModal(true)} />
         </div>
 
         <nav className="nav">

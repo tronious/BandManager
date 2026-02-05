@@ -1,9 +1,9 @@
 import './TipButton.css'
 
-export function TipButton({ onClick }) {
+export function TipButton({onClick, ...props }) {
   return (
-    <button className="tip-button" type="button" onClick={onClick}>
-      <span className="tip-button__text">! TIPS 4 TRONIOUS !</span>
+    <button {...props} className="tip-button" type="button" onClick={onClick}>
+      <span className="tip-button__text">Tip the band</span>
     </button>
   )
 }
