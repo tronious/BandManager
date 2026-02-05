@@ -60,6 +60,7 @@ const apiKeyAuth = (req, res, next) => {
     return next();
   }
   
+  // Check API key
   if (!validKey || !apiKey || apiKey !== validKey) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
