@@ -42,7 +42,7 @@ export function EventsPage() {
 
   return (
     <div className="page">
-      <PageHeader title="Come see us play live! - React" />
+      {/* <PageHeader textSize="1rem" title="Come see us play live!" /> */}
 
       <EventDetailsModal show={!!selectedEvent} event={selectedEvent} onClose={() => setSelectedEvent(null)} />
 
@@ -55,20 +55,26 @@ export function EventsPage() {
       ) : null}
 
       {!loading && !error && events.length > 0 ? (
-        <div className="events-grid">
-          {events.map((event, index) => (
-            <EventCard
-              key={event.id}
-              event={event}
-              animationDelay={index * 0.1}
-              commentCount={0}
-              onOpenDetails={() => setSelectedEvent(event)}
-              onOpenComments={() => {
-                // Comment modal port will come next
-              }}
-            />
-          ))}
-        </div>
+        <>
+          <div className="events-hint" role="note" aria-label="Tap an event for more info">
+            Tap an event for details
+          </div>
+
+          <div className="events-grid">
+            {events.map((event, index) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                animationDelay={index * 0.1}
+                commentCount={0}
+                onOpenDetails={() => setSelectedEvent(event)}
+                onOpenComments={() => {
+                  // Comment modal port will come next
+                }}
+              />
+            ))}
+          </div>
+        </>
       ) : null}
     </div>
   )

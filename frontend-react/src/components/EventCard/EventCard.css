@@ -1,14 +1,31 @@
 .event-card {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: transparent;
+   /* linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)); */
+  border: 1 solid rgba(255, 255, 255, 0.51);
   border-radius: var(--radius-lg);
   padding: 1.25rem 1.5rem;
   transition: var(--transition);
   animation: slideIn 0.4s ease backwards;
   cursor: pointer;
+  /* backdrop-filter: blur(14px) saturate(120%); */
+  /* -webkit-backdrop-filter: blur(14px) saturate(120%); */
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28); */
+}
+
+.event-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(1200px 200px at -10% -20%, rgba(255, 255, 255, 0.18), transparent 85%),
+    radial-gradient(800px 180px at 110% 0%, rgba(255, 255, 255, 0.12), transparent 90%);
+  opacity: 0.6;
+  transition: var(--transition);
 }
 
 .event-card:focus {
@@ -21,10 +38,14 @@
 }
 
 .event-card:hover {
-  background: var(--bg-card-hover);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018));
+  border-color: rgba(255, 255, 255, 0.14);
   transform: translateX(4px);
-  box-shadow: var(--shadow-glow);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.34), 0 0 24px rgba(255, 255, 255, 0.045);
+}
+
+.event-card:hover::before {
+  opacity: 1;
 }
 
 .event-date {
@@ -34,8 +55,8 @@
   justify-content: center;
   min-width: 60px;
   height: 60px;
-  background: var(--text-primary);
-  border-radius: var(--radius-md);
+  background: rgb(233, 134, 134);
+  border-radius: var(--radius-sm);
   padding: 0.5rem;
 }
 

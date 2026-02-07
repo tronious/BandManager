@@ -2,3 +2,34 @@
   display: grid;
   gap: 1rem;
 }
+
+.events-hint {
+  display: none;
+  margin: 0.5rem 0 0.75rem 0.5rem;
+  padding: 0.35rem 0.6rem;
+  width: fit-content;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  animation: eventsHintFadeIn 0.35s ease;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .events-hint {
+    display: block;
+  }
+}
+
+@keyframes eventsHintFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+}
