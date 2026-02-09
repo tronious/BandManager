@@ -64,9 +64,9 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background:
+    /* background:
       linear-gradient(to bottom, rgba(109, 18, 18, 0.2) 20%, rgba(15, 15, 19, 0.8) 20%),
-      url('./assets/tron-header.png') center/contain no-repeat;
+      url('./assets/tron-header.png') center/contain no-repeat; */
     background-color: var(--bg-primary);
     z-index: -1;
   }

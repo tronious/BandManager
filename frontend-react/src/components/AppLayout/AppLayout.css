@@ -147,7 +147,7 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 0rem;
+  gap: 2rem;
   justify-content: center;
   flex-wrap: wrap;
 }
