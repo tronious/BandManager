@@ -55,7 +55,7 @@
   justify-content: center;
   min-width: 60px;
   height: 60px;
-  background: rgb(233, 134, 134);
+  background: rgb(133, 0, 0);
   border-radius: var(--radius-sm);
   padding: 0.5rem;
 }
@@ -64,14 +64,16 @@
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--bg-primary);
+  color: white;
+   /* var(--bg-primary); */
 }
 
 .date-month {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--bg-secondary);
+  /* color: var(--bg-secondary); */
+  color: white;
 }
 
 .event-details {
@@ -81,7 +83,7 @@
 
 .event-name {
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
 }

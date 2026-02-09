@@ -56,7 +56,7 @@ export function EventCard({
           onOpenComments?.(event)
         }}
       >
-        <span>💬</span>
+        {/* <span>💬</span> */}
         <span className="action-text">Leave a Comment</span>
         {commentCount > 0 ? <span className="comment-count">{commentCount}</span> : null}
       </button>
