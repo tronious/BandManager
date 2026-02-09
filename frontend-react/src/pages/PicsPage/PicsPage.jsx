@@ -136,12 +136,17 @@ export function PicsPage() {
     setLoadingEvents(true)
     setError('')
     try {
-      const response = await apiFetch('/api/events')
+      const response = await apiFetch('/api/events?includePast=1')
       if (!response.ok) throw new Error('Failed to fetch events')
       const data = await response.json()
       const list = Array.isArray(data) ? data : []
-      setEvents(list)
-      if (!selectedEventId && list.length > 0) setSelectedEventId(String(list[0].id))
+      const sorted = [...list].sort((a, b) => {
+        const at = parseLocalDate(a?.date)?.getTime() || 0
+        const bt = parseLocalDate(b?.date)?.getTime() || 0
+        return bt - at
+      })
+      setEvents(sorted)
+      if (!selectedEventId && sorted.length > 0) setSelectedEventId(String(sorted[0].id))
     } catch (err) {
       setError(err?.message || 'Failed to load events')
     } finally {

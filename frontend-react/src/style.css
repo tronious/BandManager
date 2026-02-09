@@ -56,18 +56,20 @@ body {
   position: relative;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    linear-gradient(to bottom, rgba(15, 15, 19, 1) 10%, rgba(15, 15, 19, 0.7) 90%),
-    url('./assets/tronious-background.jpg') center/contain no-repeat;
-  background-color: var(--bg-primary);
-  z-index: -1;
+@media (min-width: 769px) {
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      linear-gradient(to bottom, rgba(109, 18, 18, 0.2) 20%, rgba(15, 15, 19, 0.8) 20%),
+      url('./assets/tron-header.png') center/contain no-repeat;
+    background-color: var(--bg-primary);
+    z-index: -1;
+  }
 }
 
 .logo-header {
@@ -76,7 +78,7 @@ body::before {
   height: 64px;
 }
 
-.logo-header::after {
+/* .logo-header::after {
   content: '';
   display: block;
   width: 100%;
@@ -84,7 +86,7 @@ body::before {
   background:
     url('./assets/tron-header.png') center/contain no-repeat;
   background-color: none;
-}
+} */
 
 #root {
   max-width: 1200px;

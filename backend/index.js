@@ -100,11 +100,16 @@ app.get('/health', (req, res) => {
 const { supabase } = require('./lib/supabase');
 app.get('/api/events', async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from('events')
-      .select('*')
-      .gte('date', new Date().toISOString().split('T')[0]) // Only future events
-      .order('date', { ascending: true });
+    const includePastRaw = String(req.query.includePast || '').toLowerCase().trim();
+    const includePast = includePastRaw === '1' || includePastRaw === 'true' || includePastRaw === 'yes';
+    const today = new Date().toISOString().split('T')[0];
+
+    let query = supabase.from('events').select('*');
+    if (!includePast) {
+      query = query.gte('date', today); // Default: only future events
+    }
+
+    const { data, error } = await query.order('date', { ascending: true });
 
     if (error) throw error;
     

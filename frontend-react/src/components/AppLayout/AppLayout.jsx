@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { BouncingNotes } from '../BouncingNotes/BouncingNotes.jsx'
 import { GlobalLoadingOverlay } from '../shared/GlobalLoadingOverlay/GlobalLoadingOverlay.jsx'
@@ -6,6 +6,7 @@ import { AdminLogin } from '../AdminLogin/AdminLogin.jsx'
 import { TipButton } from '../TipButton/TipButton.jsx'
 import { TipModal } from '../TipModal/TipModal.jsx'
 import { useApp } from '../../providers/AppProvider.jsx'
+import tronHeader from '../../assets/tron-header.png'
 import './AppLayout.css'
 
 export function AppLayout() {
@@ -13,6 +14,9 @@ export function AppLayout() {
   const { showAdminLogin, setShowAdminLogin, showTipModal, setShowTipModal } = useApp()
   const secretIndexRef = useRef(0)
   const secretTimerRef = useRef(null)
+
+  const headerRef = useRef(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const tapCountRef = useRef(0)
   const tapTimerRef = useRef(null)
@@ -95,12 +99,55 @@ export function AppLayout() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+
+    function onKeyDown(e) {
+      if (e.key === 'Escape') setMobileMenuOpen(false)
+    }
+
+    function onWindowClick(e) {
+      const el = headerRef.current
+      if (!el) return
+      const target = e.target
+      if (target && target instanceof Element && !el.contains(target)) setMobileMenuOpen(false)
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('click', onWindowClick)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('click', onWindowClick)
+    }
+  }, [mobileMenuOpen])
+
   return (
     <div className="app">
       <BouncingNotes />
       <AdminLogin show={showAdminLogin} onClose={() => setShowAdminLogin(false)} />
       <TipModal show={showTipModal} onClose={() => setShowTipModal(false)} />
-      <header className="topbar">
+      <header ref={headerRef} className="topbar">
+        <div className="topbar-row">
+          <div className="topbar-banner">
+          <button type="button" className="topbar-banner-btn" onClick={onLogoTap} aria-label="Tronious Music">
+            <img className="topbar-banner-img" src={tronHeader} alt="Tronious Music" />
+          </button>
+          </div>
+
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="topbar-nav"
+            onClick={() => setMobileMenuOpen((v) => !v)}
+          >
+            <span className="nav-toggle-icon" aria-hidden="true">
+              ☰
+            </span>
+          </button>
+        </div>
+
         <div className="logo-group">
           <div className="logo">
             <button type="button" className="logo-button" onClick={onLogoTap} aria-label="Tronious Music">
@@ -114,17 +161,33 @@ export function AppLayout() {
           <TipButton style={{display: 'none'}} onClick={() => setShowTipModal(true)} />
         </div>
 
-        <nav className="nav">
-          <NavLink to="/events" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+        <nav id="topbar-nav" className={`nav${mobileMenuOpen ? ' open' : ''}`}>
+          <NavLink
+            to="/events"
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+          >
             Gigs
           </NavLink>
-          <NavLink to="/videos" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+          <NavLink
+            to="/videos"
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+          >
             Videos
           </NavLink>
-          <NavLink to="/pics" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+          <NavLink
+            to="/pics"
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+          >
             PICS!
           </NavLink>
-          <NavLink to="/book" className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}>
+          <NavLink
+            to="/book"
+            onClick={() => setMobileMenuOpen(false)}
+            className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+          >
             Book Us!
           </NavLink>
         </nav>

@@ -3,9 +3,32 @@
   gap: 1rem;
 }
 
+.events-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0.75rem 0.5rem;
+}
+
+.events-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  user-select: none;
+}
+
+.events-toggle input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: rgba(255, 255, 255, 0.95);
+}
+
 .events-hint {
   display: none;
-  margin: 0.5rem 0 0.75rem 0.5rem;
+  margin: 0;
   padding: 0.35rem 0.6rem;
   width: fit-content;
   font-size: 0.9rem;
