@@ -92,11 +92,11 @@ export function EventsPage() {
                 checked={includePastEvents}
                 onChange={(e) => setIncludePastEvents(e.target.checked)}
               />
-              Include past events
+              Past events
             </label>
 
             <div className="events-hint" role="note" aria-label="Tap an event for more info">
-              Tap an event for details
+              Tap an event
             </div>
           </div>
 
