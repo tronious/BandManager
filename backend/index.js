@@ -20,6 +20,7 @@ const commentsRouter = require('./routes/comments');
 const bookingsRouter = require('./routes/bookings');
 const adminRouter = require('./routes/admin');
 const photosRouter = require('./routes/photos');
+const eventsRouter = require('./routes/events');
 
 const app = express();
 
@@ -96,30 +97,7 @@ app.get('/health', (req, res) => {
   console.log('Health check OK');
 });
 
-// Get all events from database (public endpoint)
-const { supabase } = require('./lib/supabase');
-app.get('/api/events', async (req, res) => {
-  try {
-    const includePastRaw = String(req.query.includePast || '').toLowerCase().trim();
-    const includePast = includePastRaw === '1' || includePastRaw === 'true' || includePastRaw === 'yes';
-    const today = new Date().toISOString().split('T')[0];
-
-    let query = supabase.from('events').select('*');
-    if (!includePast) {
-      query = query.gte('date', today); // Default: only future events
-    }
-
-    const { data, error } = await query.order('date', { ascending: true });
-
-    if (error) throw error;
-    
-    res.json(data || []);
-    console.log('GET /api/events called');
-  } catch (err) {
-    console.error('Error fetching events:', err);
-    res.status(500).json({ error: 'Failed to fetch events' });
-  }
-});
+app.use('/api/events', eventsRouter);
 
 // Comments API routes (connected to Supabase/PostgreSQL)
 app.use('/api/comments', commentsRouter);

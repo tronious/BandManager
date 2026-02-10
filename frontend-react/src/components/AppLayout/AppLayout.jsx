@@ -6,7 +6,7 @@ import { AdminLogin } from '../AdminLogin/AdminLogin.jsx'
 import { TipButton } from '../TipButton/TipButton.jsx'
 import { TipModal } from '../TipModal/TipModal.jsx'
 import { useApp } from '../../providers/AppProvider.jsx'
-import tronHeader from '../../assets/tron-header.png'
+import tronHeader from '../../assets/tronlogo.png'
 import './AppLayout.css'
 
 export function AppLayout() {
@@ -130,7 +130,7 @@ export function AppLayout() {
         <div className="topbar-row">
           <div className="topbar-banner">
           <button type="button" className="topbar-banner-btn" onClick={onLogoTap} aria-label="Tronious Music">
-            <img className="topbar-banner-img" src={tronHeader} alt="Tronious Music" />
+            {/* <img className="topbar-banner-img" src={tronHeader} alt="Tronious Music" /> */}
           </button>
           </div>
 
