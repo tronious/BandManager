@@ -76,8 +76,8 @@ body::after {
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: clamp(280px, 70vw, 980px) auto;
-  opacity: 0.2;
-  filter: blur(0.4px) saturate(0.9);
+  opacity: 0.26;
+  filter: blur(0.1px) saturate(1);
   pointer-events: none;
   z-index: -1;
 }
