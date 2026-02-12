@@ -75,7 +75,7 @@ export function EventsPage() {
 
       <EventDetailsModal show={!!selectedEvent} event={selectedEvent} onClose={() => setSelectedEvent(null)} />
 
-      {loading ? <LoadingSpinner message="Loading events..." /> : null}
+      {/* {loading ? <LoadingSpinner message="Loading events..." /> : null} */}
 
       {!loading && error ? <ErrorState message={error} onRetry={fetchEvents} /> : null}
 
