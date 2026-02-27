@@ -3,17 +3,25 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   videos: [
     {
-      url: 'https://www.youtube.com/embed/VX-C9F4sbvs?si=8GBQ6ZbM4opZXtqP',
+      url: 'https://youtu.be/VX-C9F4sbvs?si=2pDaLHCy7QFIzd-t',
       title: 'Perfect to Me (Original)',
     },
     {
-      url: 'https://www.youtube.com/embed/hHYUmVNPTwk?si=qzjtIgfJq9E5zR11',
-      title: 'Lose Control',
+      url: 'https://youtu.be/hHYUmVNPTwk?si=LipslepI09WhO76n',
+      title: 'Lose Control (Teddy Swims)'
     },
     {
-      url: 'https://www.youtube.com/embed/y09rlOT7EVo?si=CZJnXaC3coF1TjBL',
-      title: 'Poison and Wine',
+      url: 'https://youtu.be/lZMkPtGnZ8s?si=7Z0Tan8-lDXl7vgZ',
+      title: 'Save Me (Jelly Roll)'
     },
+    {
+      url: 'https://youtu.be/MM2vqSQTQlg?si=WK4e9JfoZuLGmpZL',
+      title: 'Wicked Game (Chris Issak)',
+    },
+    {
+      url: 'https://youtu.be/xgUR59omsBo?si=IyYPn8bXnof5X55P',
+      title: 'Time After Time (Cindi Lauper)',
+    }
   ],
 }
 
