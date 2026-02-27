@@ -29,6 +29,7 @@
   overflow-y: hidden;
   padding: 0.5rem 0;
   position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 .scroll-hint {
@@ -148,8 +149,9 @@
   }
 
   .videos-sidebar {
+    flex: 0 0 auto;
     width: 100%;
-    min-height: fit-content;
+    min-height: 8.5rem;
     height: auto;
   }
 
