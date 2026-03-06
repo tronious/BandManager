@@ -1,0 +1,37 @@
+trigger: none
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+  fetchDepth: 0
+
+- script: |
+    echo "Running Azure OpenAI code review..."
+
+    DIFF=$(git diff origin/main...HEAD)
+
+    curl "$(AZURE_OPENAI_ENDPOINT)openai/deployments/$(AZURE_OPENAI_DEPLOYMENT)/chat/completions?api-version=2024-02-15-preview" \
+      -H "api-key: $(AZURE_OPENAI_KEY)" \
+      -H "Content-Type: application/json" \
+      -d "{
+        \"messages\": [
+          {
+            \"role\": \"system\",
+            \"content\": \"You are a senior code reviewer. Review pull request diffs for bugs, code smells, security issues, and architectural concerns. Be concise and practical.\"
+          },
+          {
+            \"role\": \"user\",
+            \"content\": \"Review this code diff:\n\n$DIFF\"
+          }
+        ],
+        \"max_tokens\": 1000,
+        \"temperature\": 0.2
+      }"
+  displayName: "Azure OpenAI Code Review"
