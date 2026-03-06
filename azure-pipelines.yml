@@ -1,3 +1,6 @@
+variables:
+- group: ai-secrets
+
 trigger: none
 
 pr:
@@ -17,7 +20,7 @@ steps:
 
     DIFF=$(git diff origin/main...HEAD)
 
-    curl "$(AZURE_OPENAI_ENDPOINT)openai/deployments/$(AZURE_OPENAI_DEPLOYMENT)/chat/completions?api-version=2024-02-15-preview" \
+    curl "$(AZURE_OPENAI_ENDPOINT)/openai/deployments/$(AZURE_OPENAI_DEPLOYMENT)/chat/completions?api-version=2024-02-15-preview" \
       -H "api-key: $(AZURE_OPENAI_KEY)" \
       -H "Content-Type: application/json" \
       -d "{
